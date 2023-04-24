@@ -44,7 +44,24 @@ Route::prefix('admin')->group(function () {
         Route::post('create', [\App\Http\Controllers\ProgramController::class, 'create']);
         
         # get
-        Route::get('info', [\App\Http\Controllers\ProgramController::class, 'show']);
+        Route::get('info', [\App\Http\Controllers\ProgramController::class, 'showAll']);
+    
+    });
+
+    // Region
+    Route::middleware('auth:sanctum')->prefix('regions')->group(function () {
+        # get
+        Route::get('', [\App\Http\Controllers\RegionController::class, 'showAll']);
+    
+    });
+
+    // Category
+    Route::middleware('auth:sanctum')->prefix('category')->group(function () {
+        # store
+        Route::post('create', [\App\Http\Controllers\CategoryController::class, 'create']);
+        
+        # get
+        Route::get('list', [\App\Http\Controllers\CategoryController::class, 'showAll']);
     
     });
 });

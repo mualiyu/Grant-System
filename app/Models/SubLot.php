@@ -17,13 +17,20 @@ class SubLot extends Model
      */
     protected $fillable = [
         'name',
+        'category_id',
         'lot_id',
+        'category',
         'program_id',
     ];
 
     public function program(): BelongsTo
     {
         return $this->belongsTo(Program::class, "program_id", 'id');
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, "category_id", 'id');
     }
 
     public function lot(): BelongsTo

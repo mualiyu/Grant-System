@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class ProgramStatus extends Model
+class Category extends Model
 {
     use HasFactory;
 
@@ -17,14 +17,15 @@ class ProgramStatus extends Model
      */
     protected $fillable = [
         'name',
-        'isInitial',
-        'isEditable',
-        'color',
-        'program_id',
     ];
 
-    public function program(): BelongsTo
+    public function lots(): HasMany
     {
-        return $this->belongsTo(Program::class, "program_id", 'id');
+        return $this->hasMany(Lot::class, "category_id", 'id');
+    }
+
+    public function sublots(): HasMany
+    {
+        return $this->hasMany(SubLot::class, "category_id", 'id');
     }
 }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('program_id');
             $table->unsignedBigInteger('region_id');
+            $table->unsignedBigInteger('category_id');
             $table->string('name');
             $table->timestamps();
         });

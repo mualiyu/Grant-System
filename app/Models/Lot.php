@@ -20,11 +20,17 @@ class Lot extends Model
         'name',
         'region_id',
         'program_id',
+        'category_id',
     ];
 
     public function program(): BelongsTo
     {
         return $this->belongsTo(Program::class, "program_id", 'id');
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, "category_id", 'id');
     }
 
     public function region(): BelongsTo

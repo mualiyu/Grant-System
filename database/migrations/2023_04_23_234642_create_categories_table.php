@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('program_statuses', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('program_id');
             $table->string('name');
-            $table->string('isInitial')->nullable();
-            $table->string('isEditable')->nullable();
-            $table->string('color');
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('program_statuses');
+        Schema::dropIfExists('categories');
     }
 };

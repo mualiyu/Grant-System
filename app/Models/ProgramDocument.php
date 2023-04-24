@@ -18,6 +18,7 @@ class ProgramDocument extends Model
     protected $fillable = [
         'name',
         'url',
+        'type',
         'program_id',
     ];
 
