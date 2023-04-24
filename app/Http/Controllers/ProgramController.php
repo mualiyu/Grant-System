@@ -141,13 +141,13 @@ class ProgramController extends Controller
     {
         if ($request->user()->tokenCan('Admin')) {
 
-            $programs = Program::all()
-                            ->with('lots', 'sublots')
-                            // ->with('sublots')
-                            ->with('requirements')
-                            ->with('documents')
-                            ->with('stages')
-                            ->with('statuses');
+            // $programs = Program::with('lots')
+            //                 ->with('sublots')
+            //                 ->with('requirements')
+            //                 ->with('documents')
+            //                 ->with('stages')
+            //                 ->with('statuses')->all();
+            $programs = Program::all();
 
             return response()->json([
                 'status' => true,
@@ -155,6 +155,87 @@ class ProgramController extends Controller
                     'programs' => $programs,
                 ],
             ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }
+    }
+
+    public function show(Request $request)
+    {
+        if ($request->user()->tokenCan('Admin')) {
+
+            $validator = Validator::make($request->all(), [
+                'programId' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first()
+                ], 422);
+            }
+
+            return response()->json([
+                'status' => true,
+                'data' => [
+                    'programs' => Program::where('id', '=', $request->programId)
+                                    ->with('lots', 'sublots')
+                                    // ->with('sublots')
+                                    ->with('requirements')
+                                    ->with('documents')
+                                    ->with('stages')
+                                    ->with('statuses')->get()[0],
+                ],
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }
+    }
+
+    public function upload(Request $request)
+    {
+        if ($request->user()->tokenCan('Admin')) {
+
+            $validator = Validator::make($request->all(), [
+                'file' => 'required|max:9000',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first()
+                ], 422);
+            }
+            
+            if ($request->hasFile("file")) {
+                $fileNameWExt = $request->file("file")->getClientOriginalName();
+                $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+                $fileExt = $request->file("file")->getClientOriginalExtension();
+                $fileNameToStore = $fileName."_".time().".".$fileExt;
+                $request->file("file")->storeAs("public/programFiles", $fileNameToStore);
+
+                $url = url('/storage/programFiles/'.$fileNameToStore);
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "File is successfully uploaded.",
+                    'data' => [
+                        'url' => $url,
+                    ],
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message' => "Error! file upload invalid. Try again."
+                ], 404);
+            }
+
         }else{
             return response()->json([
                 'status' => false,

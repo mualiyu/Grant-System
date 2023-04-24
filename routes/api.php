@@ -43,8 +43,14 @@ Route::prefix('admin')->group(function () {
         # store
         Route::post('create', [\App\Http\Controllers\ProgramController::class, 'create']);
         
+        # upload
+        Route::post('file/upload', [\App\Http\Controllers\ProgramController::class, 'upload']);
+        
         # get
-        Route::get('info', [\App\Http\Controllers\ProgramController::class, 'showAll']);
+        Route::get('list', [\App\Http\Controllers\ProgramController::class, 'showAll']);
+
+        # get
+        Route::get('info', [\App\Http\Controllers\ProgramController::class, 'show']);
     
     });
 
@@ -54,6 +60,8 @@ Route::prefix('admin')->group(function () {
         Route::get('', [\App\Http\Controllers\RegionController::class, 'showAll']);
     
     });
+
+    
 
     // Category
     Route::middleware('auth:sanctum')->prefix('category')->group(function () {
