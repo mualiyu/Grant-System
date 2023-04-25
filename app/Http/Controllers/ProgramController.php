@@ -31,11 +31,11 @@ class ProgramController extends Controller
             }
 
             $prog = $request->program;
-            $lots = $prog['lots'];
-            $requirements = $prog['requirements'];
+            
+            
             $stages = $prog['stages'];
-            $documents = $prog['uploads'];
-            $statuses = $prog['status'];
+            // $documents = $prog['uploads'];
+            // $statuses = $prog['status'];
             // $milestones = $prog['milestones'];
 
 
@@ -45,74 +45,89 @@ class ProgramController extends Controller
             ]);
 
             // adding Lots and SubLots
-            if (count($lots)>0) {
-                foreach ($lots as $key => $l) {
-                    $lot = Lot::create([
-                        'name' => $l['name'],
-                        'category_id' => $l['category'],
-                        'region_id' => $l['region'],
-                        'program_id' => $program->id,
-                    ]);
-    
-                    foreach ($l['subLots'] as $k => $sl) {
-                        SubLot::create([
-                            'name' => $sl['name'],
-                            'category_id' => $sl['category'],
-                            'lot_id' => $lot->id,
+            if (array_key_exists('lots', $prog)) {
+                $lots = $prog['lots'];
+                if (count($lots)>0) {
+                    foreach ($lots as $key => $l) {
+                        $lot = Lot::create([
+                            'name' => $l['name'],
+                            'category_id' => $l['category'],
+                            'region_id' => $l['region'],
                             'program_id' => $program->id,
                         ]);
-    
+        
+                        foreach ($l['subLots'] as $k => $sl) {
+                            SubLot::create([
+                                'name' => $sl['name'],
+                                'category_id' => $sl['category'],
+                                'lot_id' => $lot->id,
+                                'program_id' => $program->id,
+                            ]);
+        
+                        }
                     }
                 }
             }
 
             // Adding Requirements
-            if (count($requirements)>0) {
-                foreach ($requirements as $key => $rq) {
-                    $requirement = ProgramRequirement::create([
-                        'name' => $rq['name'],
-                        'type' => $rq['type'],
-                        'program_id' => $program->id,
-                    ]);
+            if (array_key_exists('requirements', $prog)) {
+                $requirements = $prog['requirements'];
+                if (count($requirements)>0) {
+                    foreach ($requirements as $key => $rq) {
+                        $requirement = ProgramRequirement::create([
+                            'name' => $rq['name'],
+                            'type' => $rq['type'],
+                            'program_id' => $program->id,
+                        ]);
+                    }
                 }
             }
 
             // Adding Stages
-            if (count($stages)>0) {
-                foreach ($stages as $ke => $st) {
-                    $requirement = ProgramStage::create([
-                        'name' => $st['name'],
-                        'start' => $st['startDate'],
-                        'end' => $st['endDate'],
-                        'description' => $st['description'],
-                        'program_id' => $program->id,
-                    ]);
+            if (array_key_exists('stages', $prog)) {
+                $stages = $prog['stages'];
+                if (count($stages)>0) {
+                    foreach ($stages as $ke => $st) {
+                        $stages = ProgramStage::create([
+                            'name' => $st['name'],
+                            'start' => $st['startDate'],
+                            'end' => $st['endDate'],
+                            'description' => $st['description'],
+                            'program_id' => $program->id,
+                        ]);
+                    }
                 }
             }
 
 
             // Adding Documents
-            if (count($documents)>0) {
-                foreach ($documents as $doc) {
-                    $d = ProgramDocument::create([
-                        'name' => $doc['name'],
-                        'url' => $doc['file'],
-                        'type'=>"pdf",
-                        'program_id' => $program->id,
-                    ]);
+            if (array_key_exists('uploads', $prog)) {
+                $documents = $prog['uploads'];
+                if (count($documents)>0) {
+                    foreach ($documents as $doc) {
+                        $d = ProgramDocument::create([
+                            'name' => $doc['name'],
+                            'url' => $doc['file'],
+                            'type'=>"pdf",
+                            'program_id' => $program->id,
+                        ]);
+                    }
                 }
             }
 
             // Adding Statuses
-            if (count($statuses)>0) {
-                foreach ($statuses as $ks => $sta) {
-                    $d = ProgramStatus::create([
-                        'name' => $sta['name'],
-                        'isInitial' => $sta['isInitial'],
-                        'isEditable' => $sta['isEditable'],
-                        'color' => $sta['color'],
-                        'program_id' => $program->id,
-                    ]);
+            if (array_key_exists('status', $prog)) {
+                $statuses = $prog['status'];
+                if (count($statuses)>0) {
+                    foreach ($statuses as $ks => $sta) {
+                        $d = ProgramStatus::create([
+                            'name' => $sta['name'],
+                            'isInitial' => $sta['isInitial'],
+                            'isEditable' => $sta['isEditable'],
+                            'color' => $sta['color'],
+                            'program_id' => $program->id,
+                        ]);
+                    }
                 }
             }
 
