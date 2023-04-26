@@ -63,7 +63,6 @@ class ProgramController extends Controller
                                 'lot_id' => $lot->id,
                                 'program_id' => $program->id,
                             ]);
-        
                         }
                     }
                 }
@@ -94,6 +93,7 @@ class ProgramController extends Controller
                             'end' => $st['endDate'],
                             'description' => $st['description'],
                             'program_id' => $program->id,
+                            'isActive' => '1',
                         ]);
                     }
                 }
@@ -163,6 +163,16 @@ class ProgramController extends Controller
             //                 ->with('stages')
             //                 ->with('statuses')->all();
             $programs = Program::all();
+
+            foreach ($programs as $key => $p) {
+                # code...
+                $stages = ProgramStage::where(['program_id'=>$p->id, 'isActive'=>'1'])->get();
+                
+                $num_applicatnt = 0;
+                $s = count($stages)>0 ? $stages[0]:'0';
+                $p->activeStage = $s;
+                $p->noApplicants = $num_applicatnt;
+            }
 
             return response()->json([
                 'status' => true,

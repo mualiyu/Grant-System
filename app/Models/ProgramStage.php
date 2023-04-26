@@ -21,6 +21,7 @@ class ProgramStage extends Model
         'end',
         'description',
         'program_id',
+        'isActive',
     ];
 
     public function program(): BelongsTo
