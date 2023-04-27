@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 # Admins
 Route::prefix('admin')->group(function () {
@@ -54,6 +54,7 @@ Route::prefix('admin')->group(function () {
 
         # get
         Route::get('info', [\App\Http\Controllers\ProgramController::class, 'show']);
+        Route::get('info/v2', [\App\Http\Controllers\ProgramController::class, 'showObj']);
     
     });
 
@@ -109,6 +110,7 @@ Route::prefix('applicant')->group(function () {
 
         # get
         Route::get('info', [\App\Http\Controllers\ProgramController::class, 'show']);
+        Route::get('info/v2', [\App\Http\Controllers\ProgramController::class, 'showObj']);
     
     });
 });

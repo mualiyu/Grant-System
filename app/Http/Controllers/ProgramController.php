@@ -223,6 +223,95 @@ class ProgramController extends Controller
         // }
     }
 
+    public function showObj(Request $request)
+    {
+
+            $validator = Validator::make($request->all(), [
+                'programId' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first()
+                ], 422);
+            }
+
+            $prog = Program::where('id', '=', $request->programId)->get()[0];
+            $arr  = [
+                "program" => [
+                    "programName"=>$prog->name,
+                    "programDescription"=>$prog->description,
+                    "lots"=>array(),
+                    "requirements"=>[],
+                    "stages"=>[],
+                    "uploads"=>[],
+                    "status"=>[],
+                ],
+            ];
+
+            foreach ($prog->lots as $key => $l) {
+                $al = [
+                    "name"=>$l->name,
+                    "region"=>$l->region_id,
+                    "category"=>$l->category_id,
+                    "subLots"=>[],
+                ];
+
+                foreach ($l->sublots as $key => $sl) {
+                    $as = [
+                        "name"=>$sl->name,
+                        "category"=>$sl->category_id
+                    ];
+
+                    array_push($al['subLots'],$as);
+                }
+                array_push($arr['program']['lots'],$al);
+            }
+
+            foreach ($prog->requirements as $key => $r) {
+                $ar = [
+                    "name"=>$r->name,
+                    "type"=>$r->type,
+                ];
+                array_push($arr['program']['requirements'],$ar);
+            }
+
+            foreach ($prog->stages as $key => $s) {
+                $ass = [
+                    "name"=>$s->name,
+                    "startDate"=>$s->start,
+                    "endDate"=>$s->end,
+                    "description"=>$s->description,
+                ];
+                array_push($arr['program']['stages'],$ass);
+            }
+
+            foreach ($prog->documents as $key => $dd) {
+                $auu = [
+                    "name"=>$dd->name,
+                    "file"=>$dd->url,
+                ];
+                array_push($arr['program']['uploads'],$auu);
+            }   
+
+            foreach ($prog->statuses as $key => $ss) {
+                $aus = [
+                    "name"=>$ss->name,
+                    "isEditable"=>$ss->isInitial,
+                    "isInitial"=>$ss->isEditable,
+                    "color"=>$ss->color,
+                ];
+                array_push($arr['program']['status'],$aus);
+            }  
+
+            return response()->json([
+                'status' => true,
+                'data' => $arr,
+            ]);
+
+    }
+
     public function upload(Request $request)
     {
         if ($request->user()->tokenCan('Admin')) {
