@@ -28,6 +28,9 @@ Route::prefix('admin')->group(function () {
     
     # login
     Route::post('login', [\App\Http\Controllers\UserController::class, 'login']);
+
+    # logout
+    Route::middleware('auth:sanctum')->post('logout', [\App\Http\Controllers\UserController::class, 'logout']);
     
     # recover
     Route::post('recover', [\App\Http\Controllers\UserController::class, 'recover']);
@@ -61,8 +64,6 @@ Route::prefix('admin')->group(function () {
     
     });
 
-    
-
     // Category
     Route::middleware('auth:sanctum')->prefix('category')->group(function () {
         # store
@@ -88,6 +89,9 @@ Route::prefix('applicant')->group(function () {
     
     # login
     Route::post('login', [\App\Http\Controllers\ApplicantController::class, 'login']);
+
+    # logout
+    Route::middleware('auth:sanctum')->post('logout', [\App\Http\Controllers\ApplicantController::class, 'logout']);
     
     # recover
     Route::post('recover', [\App\Http\Controllers\ApplicantController::class, 'recover']);
@@ -96,4 +100,15 @@ Route::prefix('applicant')->group(function () {
     Route::post('reset', [\App\Http\Controllers\ApplicantController::class, 'reset']);
     
     Route::middleware('auth:sanctum')->get('profile', [\App\Http\Controllers\ApplicantController::class, 'user']);
+
+     // programs
+    Route::middleware('auth:sanctum')->prefix('program')->group(function () {
+    
+        # get
+        Route::get('list', [\App\Http\Controllers\ProgramController::class, 'showAll']);
+
+        # get
+        Route::get('info', [\App\Http\Controllers\ProgramController::class, 'show']);
+    
+    });
 });

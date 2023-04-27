@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AcceptApplicantMail;
 use App\Models\Applicant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class ApplicantController extends Controller
@@ -16,7 +18,9 @@ class ApplicantController extends Controller
             'email' => 'required|email|unique:applicants,email',
             'username' => 'required|unique:applicants,username',
             'phone' => 'required|unique:applicants,phone',
-            'password' => 'required|confirmed',
+            'person_incharge' => 'required',
+            'rc_number'=>'required',
+            'address'=>'required',
         ]);
 
         if ($validator->fails()) {
@@ -26,9 +30,22 @@ class ApplicantController extends Controller
             ], 422);
         }
 
-        $request['password'] = Hash::make($request->password);
+        // $request['password'] = Hash::make($request->password);
+
+        $pass = mt_rand(10000000,99999999);
+
+        $password = Hash::make($pass);
+
+        $request['password'] = $password;
 
         $user = Applicant::create($request->all());
+
+        $mailData = [
+            'title' => 'Your registration is successful.',
+            'body' => 'Use Username: '.$user->username.' & Password: '.$pass,
+        ];
+        return "Your username is: ".$request->username." & password is: ".$pass;
+        Mail::to($user->email)->send(new AcceptApplicantMail($mailData));
 
         return response()->json([
             'status' => true,

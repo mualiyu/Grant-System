@@ -21,6 +21,9 @@ class Applicant extends Model
         'username',
         'email',
         'password',
+        'person_incharge',
+        'rc_number',
+        'address',
         // 'cac_number',
     ];
 
