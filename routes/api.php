@@ -100,7 +100,16 @@ Route::prefix('applicant')->group(function () {
     # reset
     Route::post('reset', [\App\Http\Controllers\ApplicantController::class, 'reset']);
     
-    Route::middleware('auth:sanctum')->get('profile', [\App\Http\Controllers\ApplicantController::class, 'user']);
+    Route::middleware('auth:sanctum')->prefix('profile')->group(function () {
+        Route::get('', [\App\Http\Controllers\ApplicantController::class, 'user']);
+
+        Route::post('add/jv', [\App\Http\Controllers\ApplicantController::class, 'addJv']);
+
+        Route::post('update/jv/{id}', [\App\Http\Controllers\ApplicantController::class, 'updateJv']);
+
+        Route::post('update', [\App\Http\Controllers\ApplicantController::class, 'updateProfile']);
+    });
+
 
      // programs
     Route::middleware('auth:sanctum')->prefix('program')->group(function () {
@@ -111,6 +120,23 @@ Route::prefix('applicant')->group(function () {
         # get
         Route::get('info', [\App\Http\Controllers\ProgramController::class, 'show']);
         Route::get('info/v2', [\App\Http\Controllers\ProgramController::class, 'showObj']);
+    
+    });
+
+    // Region
+    Route::middleware('auth:sanctum')->prefix('regions')->group(function () {
+        # get
+        Route::get('', [\App\Http\Controllers\RegionController::class, 'showAll']);
+    
+    });
+
+    // Category
+    Route::middleware('auth:sanctum')->prefix('category')->group(function () {
+        # store
+        Route::post('create', [\App\Http\Controllers\CategoryController::class, 'create']);
+        
+        # get
+        Route::get('list', [\App\Http\Controllers\CategoryController::class, 'showAll']);
     
     });
 });

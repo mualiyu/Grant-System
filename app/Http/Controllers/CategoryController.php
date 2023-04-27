@@ -44,7 +44,7 @@ class CategoryController extends Controller
 
     public function showAll(Request $request)
     {
-        if ($request->user()->tokenCan('Admin')) {
+        // if ($request->user()->tokenCan('Admin')) {
 
             $categories = Category::all();
 
@@ -54,11 +54,11 @@ class CategoryController extends Controller
                     'categories' => $categories,
                 ],
             ]);
-        }else{
-            return response()->json([
-                'status' => false,
-                'message' => trans('auth.failed')
-            ], 404);
-        }
+        // }else{
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => trans('auth.failed')
+        //     ], 404);
+        // }
     }
 }

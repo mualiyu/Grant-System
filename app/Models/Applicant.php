@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\HasApiTokens;
 
 class Applicant extends Model
@@ -37,5 +38,9 @@ class Applicant extends Model
         'remember_token',
     ];
 
+    public function jvs(): HasMany
+    {
+        return $this->hasMany(JV::class, "applicant_id", 'id');
+    }
     
 }

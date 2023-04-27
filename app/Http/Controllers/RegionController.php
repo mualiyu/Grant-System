@@ -9,7 +9,7 @@ class RegionController extends Controller
 {
     public function showAll(Request $request)
     {
-        if ($request->user()->tokenCan('Admin')) {
+        // if ($request->user()) { // if ($request->user()->tokenCan('Admin')) {
 
             $regions = Region::all();
 
@@ -19,11 +19,11 @@ class RegionController extends Controller
                     'regions' => $regions,
                 ],
             ]);
-        }else{
-            return response()->json([
-                'status' => false,
-                'message' => trans('auth.failed')
-            ], 404);
-        }
+        // }else{
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => trans('auth.failed')
+        //     ], 404);
+        // }
     }
 }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Mail\AcceptApplicantMail;
 use App\Models\Applicant;
+use App\Models\JV;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -107,13 +109,186 @@ class ApplicantController extends Controller
     //user
     public function user(Request $request)
     {
+        $user = Applicant::where('id', $request->user()->id)->with('jvs')->get()[0];
         if ($request->user()->tokenCan('Applicant')) {
             return response()->json([
                 'status' => true,
                 'data' => [
-                    'user' => $request->user(),
+                    'user' => $user
                 ],
             ]);
+
+        }else{
+            // $request->user()->tokens()->delete();
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }
+    }
+    
+    public function updateProfile(Request $request)
+    {
+        if ($request->user()->tokenCan('Applicant')) {
+
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string',
+                'phone' => 'required',
+                'person_incharge' => 'nullable',
+                'rc_number' => 'required',
+                'address' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first()
+                ], 422);
+            }
+
+            $user = Applicant::where('id',$request->user()->id)->update($request->all());
+
+            if ($user) {
+                # code...
+                return response()->json([
+                    'status' => true,
+                    'message' => "Profile update completed",
+                    // 'data' => [
+                    //     'user' => User::find($request->user()->id),
+                    // ],
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message' => "Sorry Profile Update Failed"
+                ], 422);
+            }
+
+        }else{
+            // $request->user()->tokens()->delete();
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }
+    }
+
+    public function addJv(Request $request)
+    {
+        if ($request->user()->tokenCan('Applicant')) {
+
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string',
+                'phone' => 'required',
+                'email' => "required",
+                'rc_number' => 'nullable',
+                'address' => 'nullable',
+                'document'=> 'nullable',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first()
+                ], 422);
+            }
+
+            if ($request->hasFile("document")) {
+                $fileNameWExt = $request->file("document")->getClientOriginalName();
+                $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+                $fileExt = $request->file("document")->getClientOriginalExtension();
+                $fileNameToStore = $fileName."_".time().".".$fileExt;
+                $request->file("document")->storeAs("public/jvFiles", $fileNameToStore);
+
+                $url = url('/storage/jvFiles/'.$fileNameToStore);
+            }else{
+                $url = '';
+            }
+
+            // $user = Applicant::where('id',$request->user()->id)->update($request->all());
+            $request['applicant_id'] = $request->user()->id;
+
+            $request['document'] = $url;
+
+            $jv = JV::create($request->all());
+
+            if ($jv) {
+                
+                return response()->json([
+                    'status' => true,
+                    'message' => "Join Venture is added to system info",
+                    'data' => [
+                        'jv' => $jv,
+                    ],
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message' => "Sorry Failed to add JV"
+                ], 422);
+            }
+
+        }else{
+            // $request->user()->tokens()->delete();
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }
+    }
+
+    public function updateJv(Request $request, $id)
+    {
+        if ($request->user()->tokenCan('Applicant')) {
+
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string',
+                'phone' => 'required',
+                'email' => "required",
+                'rc_number' => 'nullable',
+                'address' => 'nullable',
+                'document'=> 'nullable',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first()
+                ], 422);
+            }
+
+            if ($request->hasFile("document")) {
+                $fileNameWExt = $request->file("document")->getClientOriginalName();
+                $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+                $fileExt = $request->file("document")->getClientOriginalExtension();
+                $fileNameToStore = $fileName."_".time().".".$fileExt;
+                $request->file("document")->storeAs("public/jvFiles", $fileNameToStore);
+
+                $url = url('/storage/jvFiles/'.$fileNameToStore);
+            }else{
+                $url = '';
+            }
+
+
+            $request['document'] = $url;
+
+            $jv = JV::where(['id'=>$id, 'applicant_id'=>$request->user()->id])->update($request->all());
+
+            if ($jv) {
+                
+                return response()->json([
+                    'status' => true,
+                    'message' => "Join Venture is updated",
+                    // 'data' => [
+                    //     'jv' => $jv,
+                    // ],
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message' => "Sorry Failed to update JV"
+                ], 422);
+            }
 
         }else{
             // $request->user()->tokens()->delete();
