@@ -21,6 +21,7 @@ class Application extends Model
     protected $fillable = [
         'applicant_id',
         'program_id',
+        'status',
     ];
 
     public function sublots(): BelongsToMany
@@ -61,6 +62,11 @@ class Application extends Model
     public function app_financial_depts(): HasMany
     {
         return $this->hasMany(ApplicationFinancialDebtInfo::class, "application_id", 'id');
+    }
+
+    public function app_document(): HasMany
+    {
+        return $this->hasMany(ApplicationDocument::class, "application_id", 'id');
     }
     
 

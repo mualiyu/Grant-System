@@ -157,5 +157,12 @@ Route::prefix('applicant')->group(function () {
 
         # add Financial Info
         Route::post('create/financial', [\App\Http\Controllers\ApplicationController::class, 'createFinancial']);
+
+        # add Reference Projects
+        Route::post('create/documents', [\App\Http\Controllers\ApplicationController::class, 'createDocument']);
+        Route::post('create/documents/upload', [\App\Http\Controllers\ApplicationController::class, 'uploadDocument']);
+
+        # submit
+        Route::post('submit', [\App\Http\Controllers\ApplicationController::class, 'submit']);
     });
 });

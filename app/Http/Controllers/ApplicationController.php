@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Application;
 use App\Models\ApplicationCv;
+use App\Models\ApplicationDocument;
 use App\Models\ApplicationEducation;
 use App\Models\ApplicationEmployer;
 use App\Models\ApplicationFinancialDebtInfo;
@@ -397,12 +398,47 @@ class ApplicationController extends Controller
                 'address'=> $dept['borrower']['address'],
             ]);
 
-
-
-
             return response()->json([
                 'status' => true,
                 'message' => "Successful, project's are added to the application."
+
+            ]);
+            
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }
+    }
+
+    public function createDocument(Request $request)
+    {
+        if ($request->user()->tokenCan('Applicant')) {
+
+            $validator = Validator::make($request->all(), [
+                'application_id'=>'required',
+                'documents' => 'required',
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first()
+                ], 422);
+            }
+
+            foreach ($request->documents as $key => $doc) {
+                $docc = ApplicationDocument::create([
+                    "application_id"=>$request->application_id,
+                    "name"=>$doc['name'],
+                    "url"=>$doc['url'],
+                ]);
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => "Successful, Documents are added to application."
 
             ]);
             
@@ -509,5 +545,89 @@ class ApplicationController extends Controller
             ], 404);
         }
     }
+
+    public function uploadDocument(Request $request)
+    {
+        if ($request->user()->tokenCan('Applicant')) {
+
+            $validator = Validator::make($request->all(), [
+                'file' => 'required|max:9000',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first()
+                ], 422);
+            }
+            
+            if ($request->hasFile("file")) {
+                $fileNameWExt = $request->file("file")->getClientOriginalName();
+                $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+                $fileExt = $request->file("file")->getClientOriginalExtension();
+                $fileNameToStore = $fileName."_".time().".".$fileExt;
+                $request->file("file")->storeAs("public/documentFiles", $fileNameToStore);
+
+                $url = url('/storage/documentFiles/'.$fileNameToStore);
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "File is successfully uploaded.",
+                    'data' => [
+                        'url' => $url,
+                    ],
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message' => "Error! file upload invalid. Try again."
+                ], 422);
+            }
+
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }
+    }
+
+    public function submit(Request $request)
+    {
+        if ($request->user()->tokenCan('Applicant')) {
+
+            $validator = Validator::make($request->all(), [
+                'application_id'=>'required',
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first()
+                ], 422);
+            }
+
+            Application::where('id', $request->application_id)->update([
+                "status"=>"1"
+            ]);
+
+            $app = Application::find($request->application_id);
+
+            return response()->json([
+                'status' => true,
+                'message' => "Successful, Documents are added to application.",
+                'data' => [
+                    "application"=>$app
+                ]
+            ]);
+            
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }
+    }
+    
 
 }
