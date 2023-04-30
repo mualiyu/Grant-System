@@ -288,7 +288,7 @@ class ApplicationController extends Controller
                         'role_of_applicant'=>$project['role_of_applicant'],
                         'equity'=>$project['equity'],
                         'implemented'=>$project['implemented'],
-                        'subcontactor_role'=>$project['subcontactor_role'],
+                        'subcontactor_role'=>$project['subcontractor_role'],
                         'award_letter'=>$project['award_letter'],
                         'interim_valuation_cert'=>$project['interim_valuation_cert'],
                         'certificate_of_completion'=>$project['certificate_of_completion'],
