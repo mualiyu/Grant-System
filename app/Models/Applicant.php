@@ -42,5 +42,10 @@ class Applicant extends Model
     {
         return $this->hasMany(JV::class, "applicant_id", 'id');
     }
+
+    public function applications(): HasMany
+    {
+        return $this->hasMany(Application::class, "applicant_id", 'id');
+    }
     
 }

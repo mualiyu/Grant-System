@@ -137,6 +137,25 @@ Route::prefix('applicant')->group(function () {
         
         # get
         Route::get('list', [\App\Http\Controllers\CategoryController::class, 'showAll']);
-    
+    });
+
+    // Application
+    Route::middleware('auth:sanctum')->prefix('application')->group(function () {
+        # initial
+        Route::post('create/initial', [\App\Http\Controllers\ApplicationController::class, 'createInitial']);
+        
+        # add profile
+        Route::post('create/profile', [\App\Http\Controllers\ApplicationController::class, 'createProfile']);
+        
+        # add Staff
+        Route::post('create/staff', [\App\Http\Controllers\ApplicationController::class, 'createStaff']);
+        Route::post('create/staff/upload', [\App\Http\Controllers\ApplicationController::class, 'uploadStaff']);
+
+        # add Reference Projects
+        Route::post('create/projects', [\App\Http\Controllers\ApplicationController::class, 'createProject']);
+        Route::post('create/projects/upload', [\App\Http\Controllers\ApplicationController::class, 'uploadProject']);
+
+        # add Financial Info
+        Route::post('create/financial', [\App\Http\Controllers\ApplicationController::class, 'createFinancial']);
     });
 });

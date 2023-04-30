@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class SubLot extends Model
 {
@@ -36,5 +37,10 @@ class SubLot extends Model
     public function lot(): BelongsTo
     {
         return $this->belongsTo(Lot::class, "lot_id", 'id');
+    }
+
+    public function applications(): BelongsToMany
+    {
+        return $this->belongsToMany(Application::class);
     }
 }
