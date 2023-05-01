@@ -39,7 +39,7 @@ class Application extends Model
         return $this->belongsTo(Program::class, "program_id", 'id');
     }
 
-    public function app_profiles(): HasOne
+    public function app_profile(): HasOne
     {
         return $this->hasOne(ApplicationProfile::class, "application_id", 'id');
     }

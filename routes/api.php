@@ -164,5 +164,8 @@ Route::prefix('applicant')->group(function () {
 
         # submit
         Route::post('submit', [\App\Http\Controllers\ApplicationController::class, 'submit']);
+
+        #Get application
+        Route::get('get', [\App\Http\Controllers\ApplicationController::class, 'getApplication']);
     });
 });
