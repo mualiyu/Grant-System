@@ -32,6 +32,8 @@ class ApplicationController extends Controller
             $validator = Validator::make($request->all(), [
                 'program_id' => 'required',
                 'sublots'=> 'required',
+                'update' => 'nullable',
+                'application_id' => 'nullable'
                 
             ]);
     
@@ -42,19 +44,25 @@ class ApplicationController extends Controller
                 ], 422);
             }
 
-            $application = Application::create([
-                'applicant_id'=>$request->user()->id,
-                'program_id'=>$request->program_id,
-            ]);
+            if ($request->update == "1") {
+                $application = Application::where("id", $request->application_id)->get();
+                $application = $application[0];
+                
+                DB::table("application_sub_lot")->where("application_id", $application->id)->delete();
+            }else{
+                $application = Application::create([
+                    'applicant_id'=>$request->user()->id,
+                    'program_id'=>$request->program_id,
+                ]);
+            }
 
             foreach ($request->sublots as $key => $sub) {
                 DB::table('application_sub_lot')->insert([
-                    'application_id'=>$request->user()->id,
+                    'application_id'=>$application->id,
                     'sub_lot_id'=>$sub['id'],
                 ]);
                 
             }
-
 
             return response()->json([
                 'status' => true,
@@ -75,14 +83,15 @@ class ApplicationController extends Controller
         if ($request->user()->tokenCan('Applicant')) {
 
             $validator = Validator::make($request->all(), [
+                'update'=>'nullable',
                 'application_id'=>'required',
-                'applicant_name' => 'required|string',
-                'date_of_incorporation'=> 'required|string',
+                'applicant_name' => 'required',
+                'date_of_incorporation'=> 'required',
                 'brief_description'=> 'nullable',
                 'website'=> 'nullable',
                 // 'cac_number'=> 'required',
                 'share_holders'=> 'nullable',
-                'ultimate_owner'=> 'required|string',
+                'ultimate_owner'=> 'required',
                 'contact_person'=> 'nullable',
             ]);
     
@@ -93,21 +102,38 @@ class ApplicationController extends Controller
                 ], 422);
             }
 
+            if ($request->update == "1") {
+                $applicationP = ApplicationProfile::where("application_id", $request->application_id)->get();
+                $applicationP = $applicationP[0];
 
-            $applicationP = ApplicationProfile::create([
-                'applicant_id' => $request->user()->id,
-                'application_id' => $request->application_id,
-                'name' => $request->applicant_name,
-                'registration_date' => $request->date_of_incorporation,
-                'description' => $request->brief_description,
-                'website' => $request->website,
-                'cac_number'=>$request->user()->rc_number,
-                'address'=>$request->user()->address,
-                'owner'=>$request->ultimate_owner,
-            ]);
+                ApplicationProfile::where("id", $applicationP->id)->update([
+                    'name' => $request->applicant_name,
+                    'registration_date' => $request->date_of_incorporation,
+                    'description' => $request->brief_description,
+                    'website' => $request->website,
+                    'cac_number'=>$request->user()->rc_number,
+                    'address'=>$request->user()->address,
+                    'owner'=>$request->ultimate_owner,
+                ]);
+
+                ContactPerson::where("app_prof_id", $applicationP->id)->delete();
+                ShareHolder::where("app_prof_id", $applicationP->id)->delete();
+            }else{
+                $applicationP = ApplicationProfile::create([
+                    'applicant_id' => $request->user()->id,
+                    'application_id' => $request->application_id,
+                    'name' => $request->applicant_name,
+                    'registration_date' => $request->date_of_incorporation,
+                    'description' => $request->brief_description,
+                    'website' => $request->website,
+                    'cac_number'=>$request->user()->rc_number,
+                    'address'=>$request->user()->address,
+                    'owner'=>$request->ultimate_owner,
+                ]);
+            }
 
             if (count($request->contact_person) > 0) {
-                # code...
+                
                 foreach ($request->contact_person as $key => $cp) {
                     $contact = ContactPerson::create([
                         "app_prof_id"=>$applicationP->id,
@@ -154,6 +180,7 @@ class ApplicationController extends Controller
         if ($request->user()->tokenCan('Applicant')) {
 
             $validator = Validator::make($request->all(), [
+                'update'=>'nullable',
                 'application_id'=>'required',
                 'staff' => 'required',
             ]);
@@ -166,6 +193,19 @@ class ApplicationController extends Controller
             }
 
             if (count($request->staff) > 0) {
+
+                if ($request->update == "1") {
+                    $staff = ApplicationCv::where('application_id', $request->application_id)->get();
+                    if (count($staff)>0) {
+                        foreach ($staff as $s) {
+                            ApplicationEmployer::where("application_cv_id", $s->id)->delete();
+                            ApplicationEducation::where("application_cv_id", $s->id)->delete();
+                            ApplicationMembership::where("application_cv_id", $s->id)->delete();
+                            ApplicationTraining::where("application_cv_id", $s->id)->delete();
+                        }
+                        ApplicationCv::where('application_id', $request->application_id)->delete();
+                    }
+                }
 
                 foreach ($request->staff as $key => $staff) {
                     $staff_create = ApplicationCv::create([
@@ -261,6 +301,7 @@ class ApplicationController extends Controller
         if ($request->user()->tokenCan('Applicant')) {
 
             $validator = Validator::make($request->all(), [
+                'update'=>'nullable',
                 'application_id'=>'required',
                 'projects' => 'required',
             ]);
@@ -273,6 +314,17 @@ class ApplicationController extends Controller
             }
 
             if (count($request->projects) > 0) {
+
+                if ($request->update == "1") {
+                    $projects = ApplicationProject::where('application_id', $request->application_id)->get();
+                    if (count($projects)>0) {
+                        foreach ($projects as $p) {
+                            ApplicationProjectReferee::where("application_project_id", $p->id)->delete();
+                            ApplicationProjectSubContractor::where("application_project_id", $p->id)->delete();
+                        }
+                        ApplicationProject::where('application_id', $request->application_id)->delete();
+                    }
+                }
 
                 foreach ($request->projects as $key => $project) {
                     $project_create = ApplicationProject::create([
@@ -316,8 +368,6 @@ class ApplicationController extends Controller
                             ]);
                         }
                     }
-
-
                 }
 
                 return response()->json([
@@ -332,9 +382,7 @@ class ApplicationController extends Controller
                     'message' => "Failed, Due to no projects were added. try again!"
                 ], 422);
             }
-
-
-            
+  
         }else{
             return response()->json([
                 'status' => false,
@@ -348,6 +396,7 @@ class ApplicationController extends Controller
         if ($request->user()->tokenCan('Applicant')) {
 
             $validator = Validator::make($request->all(), [
+                'update'=>'nullable',
                 'application_id'=>'required',
                 'financial_info' => 'required',
                 'financial_dept_info' => 'required',
@@ -358,6 +407,11 @@ class ApplicationController extends Controller
                     'status' => false,
                     'message' => $validator->errors()->first()
                 ], 422);
+            }
+
+            if ($request->update == "1") {
+                ApplicationFinancialInfo::where("application_id", $request->application_id)->delete();
+                ApplicationFinancialDebtInfo::where("application_id", $request->application_id)->delete();
             }
 
             $fy1 = $request->financial_info['fy1'];
@@ -400,7 +454,7 @@ class ApplicationController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => "Successful, project's are added to the application."
+                'message' => "Successful, Financial info are added to the application."
 
             ]);
             
@@ -417,6 +471,7 @@ class ApplicationController extends Controller
         if ($request->user()->tokenCan('Applicant')) {
 
             $validator = Validator::make($request->all(), [
+                'update'=>'nullable',
                 'application_id'=>'required',
                 'documents' => 'required',
             ]);
@@ -426,6 +481,10 @@ class ApplicationController extends Controller
                     'status' => false,
                     'message' => $validator->errors()->first()
                 ], 422);
+            }
+
+            if ($request->update == "1") {
+                ApplicationDocument::where("application_id", $request->application_id)->delete();
             }
 
             foreach ($request->documents as $key => $doc) {

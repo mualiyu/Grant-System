@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('application_sub_lots', function (Blueprint $table) {
+        Schema::create('application_sub_lot', function (Blueprint $table) {
             $table->id();
             // $table->timestamps();
             $table->unsignedBigInteger('application_id')->unsigned();
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('application_sub_lots');
+        Schema::dropIfExists('application_sub_lot');
     }
 };
