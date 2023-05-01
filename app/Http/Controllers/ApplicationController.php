@@ -630,7 +630,7 @@ class ApplicationController extends Controller
     }
 
 
-    public function getAppication(Request $request)
+    public function getApplication(Request $request)
     {
         if ($request->user()->tokenCan('Applicant')) {
 
