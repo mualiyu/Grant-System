@@ -20,7 +20,7 @@ class SubLot extends Model
         'name',
         'category_id',
         'lot_id',
-        'category',
+        // 'category',
         'program_id',
     ];
 

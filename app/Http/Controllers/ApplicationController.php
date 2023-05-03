@@ -20,6 +20,7 @@ use App\Models\ApplicationSubLot;
 use App\Models\ApplicationTraining;
 use App\Models\ContactPerson;
 use App\Models\ShareHolder;
+use App\Models\SubLot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -184,6 +185,7 @@ class ApplicationController extends Controller
                 'update'=>'nullable',
                 'application_id'=>'required',
                 'staff' => 'required',
+                'choice' => 'nullable',
             ]);
     
             if ($validator->fails()) {
@@ -769,7 +771,7 @@ class ApplicationController extends Controller
                 ], 422);
             }
 
-            $app = Application::where(['applicant_id'=> $request->user()->id, 'program_id'=>$request->program_id])->get();
+            $app = Application::where(['applicant_id'=> $request->user()->id, 'program_id'=>$request->program_id])->with("sublots")->get();
             if (count($app)>0) {
                 $app = $app[0];
 
@@ -785,6 +787,32 @@ class ApplicationController extends Controller
                     "financial_dept_info" => $app_fin_dept
                 ];
 
+                $sublots = DB::table('application_sub_lot')->where('application_id', $app->id)->get();
+                if (count($sublots)>0) {
+                    $subs = [];
+                    
+                    foreach ($sublots as $sl) {
+                        
+                        $s_sublot = SubLot::where('id', $sl->sub_lot_id)->get();
+                        if (count($s_sublot)>0) {
+                            $s_s = $s_sublot[0];
+                            // return $s_s->name;
+                            $arr = [
+                                "sublot_id"=>$sl->sub_lot_id,
+                                "choice"=>$sl->choice,
+                                "sublot_name" => $s_s->name,
+                                // "sublot_category" => $s_s->category->name,
+                                "lot_name" => $s_s->lot->name,
+                                "lot_region" => $s_s->lot->region->name,
+                            ];
+    
+                            array_push($subs, $arr);
+                        }
+                    }
+                }else{
+                    $subs = [];
+                }
+
                 $app_docs = ApplicationDocument::where(["application_id"=>$app->id])->get();
 
                 $app['application_profile'] = count($app_profile)>0 ? $app_profile: [];
@@ -793,6 +821,8 @@ class ApplicationController extends Controller
 
                 $app['application_financials'] = $fin;
                 $app['application_documents'] = $app_docs;
+
+                $app['application_sublots'] = $subs;
 
                 return response()->json([
                     'status' => true,

@@ -46,7 +46,7 @@ class ApplicantController extends Controller
             'title' => 'Your registration is successful.',
             'body' => 'Use Username: '.$user->username.' & Password: '.$pass,
         ];
-        // return "Your username is: ".$request->username." & password is: ".$pass;
+        return "Your username is: ".$request->username." & password is: ".$pass;
         Mail::to($user->email)->send(new AcceptApplicantMail($mailData));
 
         return response()->json([

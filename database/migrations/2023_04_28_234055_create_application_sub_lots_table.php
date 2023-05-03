@@ -16,6 +16,7 @@ return new class extends Migration
             // $table->timestamps();
             $table->unsignedBigInteger('application_id')->unsigned();
             $table->unsignedBigInteger('sub_lot_id')->unsigned();
+            $table->string('choice')->nullable();
         });
     }
 
