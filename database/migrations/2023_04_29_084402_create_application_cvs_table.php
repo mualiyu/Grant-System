@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('membership')->nullable();
             // $table->string('countries_experience');
             // $table->longText('work_undertaken')->nullable();
+            $table->string('coren_license_number')->nullable();
+            $table->string('coren_license_document')->nullable();
             $table->string('education_certificate')->nullable();
             $table->string('professional_certificate')->nullable();
             $table->string('cv')->nullable();

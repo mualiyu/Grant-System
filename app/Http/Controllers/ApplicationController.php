@@ -89,9 +89,8 @@ class ApplicationController extends Controller
                 'application_id'=>'required',
                 'applicant_name' => 'required',
                 'date_of_incorporation'=> 'required',
-                'brief_description'=> 'nullable',
-                'website'=> 'nullable',
-                // 'cac_number'=> 'required',
+                // 'brief_description'=> 'nullable',
+                // 'website'=> 'nullable',
                 'share_holders'=> 'nullable',
                 'ultimate_owner'=> 'nullable',
                 'contact_person'=> 'nullable',
@@ -111,8 +110,8 @@ class ApplicationController extends Controller
                 ApplicationProfile::where("id", $applicationP->id)->update([
                     'name' => $request->applicant_name,
                     'registration_date' => $request->date_of_incorporation,
-                    'description' => $request->brief_description,
-                    'website' => $request->website,
+                    // 'description' => $request->brief_description,
+                    // 'website' => $request->website,
                     'cac_number'=>$request->user()->rc_number,
                     'address'=>$request->user()->address,
                     'owner'=>$request->ultimate_owner,
@@ -126,8 +125,8 @@ class ApplicationController extends Controller
                     'application_id' => $request->application_id,
                     'name' => $request->applicant_name,
                     'registration_date' => $request->date_of_incorporation,
-                    'description' => $request->brief_description,
-                    'website' => $request->website,
+                    // 'description' => $request->brief_description,
+                    // 'website' => $request->website,
                     'cac_number'=>$request->user()->rc_number,
                     'address'=>$request->user()->address,
                     'owner'=>$request->ultimate_owner,
@@ -159,6 +158,50 @@ class ApplicationController extends Controller
             }
 
             $appP = ApplicationProfile::where('id', $applicationP->id)->with('share_holders')->with('contact_persons')->get();
+
+            return response()->json([
+                'status' => true,
+                'data' => [
+                    'application_profile' => $appP,
+                ],
+            ]);
+
+            
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }
+    }
+
+
+    public function createProfileUpdate(Request $request)
+    {
+        if ($request->user()->tokenCan('Applicant')) {
+
+            $validator = Validator::make($request->all(), [
+                'application_id'=>'required',
+                'application_profile_id'=>'required',
+                'brief_description'=> 'nullable',
+                'website'=> 'nullable',
+                'evidence_of_equipment_ownership'=> 'nullable',
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first()
+                ], 422);
+            }
+
+            $applicationP = ApplicationProfile::where('id', $request->application_profile_id)->update([
+                'description' => $request->brief_description,
+                'website' => $request->website,
+                'evidence_of_equipment_ownership' => $request->evidence_of_equipment_ownership,
+            ]);
+
+            $appP = ApplicationProfile::where('id', $request->application_profile_id)->with('share_holders')->with('contact_persons')->get();
 
             return response()->json([
                 'status' => true,
@@ -216,7 +259,8 @@ class ApplicationController extends Controller
                         'name'=>$staff['name'],
                         // 'dob'=>$staff['dob'],
                         'language'=>$staff['language'],
-                        'membership'=>$staff['membership'],
+                        'coren_license_number'=>$staff['coren_license_number'],
+                        'coren_license_document'=>$staff['coren_license_document'],
                         // 'countries_experience'=>$staff['countries_experience'],
                         // 'work_undertaken'=>$staff['work_undertaken'],
                         'education_certificate'=>$staff['education_certificate'],
@@ -364,7 +408,7 @@ class ApplicationController extends Controller
                         'award_letter'=>$project['award_letter'],
                         'interim_valuation_cert'=>$project['interim_valuation_cert'],
                         'certificate_of_completion'=>$project['certificate_of_completion'],
-                        // 'evidence_of_equity'=>$project['evidence_of_equity'],
+                        'evidence_of_completion'=>$project['evidence_of_completion'],
                     ]);
 
                     // Referees
@@ -469,7 +513,7 @@ class ApplicationController extends Controller
             $borrower = ApplicationFinancialDebtInfoBorrower::create([
                 'application_financial_debt_id'=>$dept_create->id,
                 'name'=> $dept['borrower']['name'],
-                'rc_number'=> $dept['borrower']['rc_number'],
+                // 'rc_number'=> $dept['borrower']['rc_number'],
                 'address'=> $dept['borrower']['address'],
             ]);
 
@@ -695,6 +739,52 @@ class ApplicationController extends Controller
                 $request->file("file")->storeAs("public/financialFiles", $fileNameToStore);
 
                 $url = url('/storage/financialFiles/'.$fileNameToStore);
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "File is successfully uploaded.",
+                    'data' => [
+                        'url' => $url,
+                    ],
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message' => "Error! file upload invalid. Try again."
+                ], 422);
+            }
+
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }
+    }
+
+    public function uploadProfile(Request $request)
+    {
+        if ($request->user()->tokenCan('Applicant')) {
+
+            $validator = Validator::make($request->all(), [
+                'file' => 'required|max:9000',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first()
+                ], 422);
+            }
+            
+            if ($request->hasFile("file")) {
+                $fileNameWExt = $request->file("file")->getClientOriginalName();
+                $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+                $fileExt = $request->file("file")->getClientOriginalExtension();
+                $fileNameToStore = $fileName."_".time().".".$fileExt;
+                $request->file("file")->storeAs("public/profileFiles", $fileNameToStore);
+
+                $url = url('/storage/profileFiles/'.$fileNameToStore);
 
                 return response()->json([
                     'status' => true,

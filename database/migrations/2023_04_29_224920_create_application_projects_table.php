@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('award_letter')->nullable();
             $table->string('interim_valuation_cert')->nullable();
             $table->string('certificate_of_completion')->nullable();
-            // $table->string('evidence_of_equity')->nullable();
+            $table->string('evidence_of_completion')->nullable();
             $table->timestamps();
         });
     }

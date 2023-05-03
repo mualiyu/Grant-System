@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('total_liability')->nullable();
             $table->string('total_networth')->nullable();
             $table->string('annual_turnover')->nullable();
-            $table->string('profit_before_taxes')->nullable();
-            $table->string('profit_after_taxes')->nullable();
+            // $table->string('profit_before_taxes')->nullable();
+            // $table->string('profit_after_taxes')->nullable();
             $table->string('type')->nullable();
             $table->timestamps();
         });

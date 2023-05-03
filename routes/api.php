@@ -153,7 +153,9 @@ Route::prefix('applicant')->group(function () {
         
         # add profile
         Route::post('create/profile', [\App\Http\Controllers\ApplicationController::class, 'createProfile']);
-        
+        Route::post('update/profile', [\App\Http\Controllers\ApplicationController::class, 'createProfileUpdate']);
+        Route::post('create/profile/upload', [\App\Http\Controllers\ApplicationController::class, 'uploadProfile']);
+
         # add Staff
         Route::post('create/staff', [\App\Http\Controllers\ApplicationController::class, 'createStaff']);
         Route::post('create/staff/upload', [\App\Http\Controllers\ApplicationController::class, 'uploadStaff']);

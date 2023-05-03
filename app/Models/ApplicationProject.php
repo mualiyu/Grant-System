@@ -34,7 +34,7 @@ class ApplicationProject extends Model
         'award_letter',
         'interim_valuation_cert',
         'certificate_of_completion',
-        // 'evidence_of_equity',
+        'evidence_of_completion',
     ];
 
     public function application(): BelongsTo

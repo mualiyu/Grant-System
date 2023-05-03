@@ -27,6 +27,7 @@ class ApplicationProfile extends Model
         'website',
         'owner',
         'authorised_personel',
+        'evidence_of_equipment_ownership',
     ];
 
     public function application(): BelongsTo

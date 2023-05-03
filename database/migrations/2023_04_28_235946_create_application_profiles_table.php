@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('website')->nullable();
             $table->string('owner')->nullable();
             $table->string('authorised_personel')->nullable();
+            $table->string('evidence_of_equipment_ownership')->nullable();
             $table->timestamps();
         });
     }

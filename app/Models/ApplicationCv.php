@@ -29,6 +29,8 @@ class ApplicationCv extends Model
         'professional_certificate',
         'cv',
         'membership',
+        'coren_license_number',
+        'coren_license_document',
     ];
 
     public function application(): BelongsTo
