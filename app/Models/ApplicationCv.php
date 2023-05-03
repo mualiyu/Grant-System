@@ -28,6 +28,7 @@ class ApplicationCv extends Model
         'education_certificate',
         'professional_certificate',
         'cv',
+        'membership',
     ];
 
     public function application(): BelongsTo
@@ -40,10 +41,10 @@ class ApplicationCv extends Model
     //     return $this->hasMany(ApplicationEducation::class, "application_cv_id", 'id');
     // }
 
-    public function memberships(): HasOne
-    {
-        return $this->hasOne(ApplicationMembership::class, "application_cv_id", 'id');
-    }
+    // public function memberships(): HasOne
+    // {
+    //     return $this->hasOne(ApplicationMembership::class, "application_cv_id", 'id');
+    // }
 
     // public function trainings(): HasMany
     // {

@@ -214,7 +214,7 @@ class ApplicationController extends Controller
                         'name'=>$staff['name'],
                         // 'dob'=>$staff['dob'],
                         'language'=>$staff['language'],
-                        // 'nationality'=>$staff['nationality'],
+                        'membership'=>$staff['membership'],
                         // 'countries_experience'=>$staff['countries_experience'],
                         // 'work_undertaken'=>$staff['work_undertaken'],
                         'education_certificate'=>$staff['education_certificate'],
@@ -264,16 +264,16 @@ class ApplicationController extends Controller
                     }
 
                     // membership
-                    if (count($staff['membership'])>0) {
-                        foreach ($staff['membership'] as $mem) {
-                            ApplicationMembership::create([
-                                'application_cv_id'=>$staff_create->id,
-                                'rank'=>$mem['rank'],
-                                'state'=>$mem['state'],
-                                'date'=>$mem['date'],
-                            ]);
-                        }
-                    }
+                    // if (count($staff['membership'])>0) {
+                    //     foreach ($staff['membership'] as $mem) {
+                    //         ApplicationMembership::create([
+                    //             'application_cv_id'=>$staff_create->id,
+                    //             'rank'=>$mem['rank'],
+                    //             'state'=>$mem['state'],
+                    //             'date'=>$mem['date'],
+                    //         ]);
+                    //     }
+                    // }
 
                     // training
                     // if (count($staff['training'])>0) {
@@ -774,7 +774,7 @@ class ApplicationController extends Controller
                 $app = $app[0];
 
                 $app_profile = ApplicationProfile::where(["application_id"=>$app->id])->with('contact_persons')->with('share_holders')->get();
-                $app_staff = ApplicationCv::where(["application_id"=>$app->id])->with('memberships')->with('employers')->get();
+                $app_staff = ApplicationCv::where(["application_id"=>$app->id])->with('employers')->get();
 
                 $app_projects = ApplicationProject::where(["application_id"=>$app->id])->with('referees')->with('sub_contractors')->get();
                 

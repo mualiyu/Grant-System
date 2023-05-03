@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             // $table->string('dob');
             $table->string('language')->nullable();
-            // $table->string('nationality');
+            $table->string('membership')->nullable();
             // $table->string('countries_experience');
             // $table->longText('work_undertaken')->nullable();
             $table->string('education_certificate')->nullable();
