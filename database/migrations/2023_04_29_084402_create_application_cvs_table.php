@@ -15,13 +15,14 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('application_id');
             $table->string('name');
-            $table->string('dob');
+            // $table->string('dob');
             $table->string('language')->nullable();
-            $table->string('nationality');
-            $table->string('countries_experience');
-            $table->longText('work_undertaken')->nullable();
+            // $table->string('nationality');
+            // $table->string('countries_experience');
+            // $table->longText('work_undertaken')->nullable();
             $table->string('education_certificate')->nullable();
             $table->string('professional_certificate')->nullable();
+            $table->string('cv')->nullable();
             $table->timestamps();
         });
     }

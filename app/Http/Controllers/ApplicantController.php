@@ -184,7 +184,15 @@ class ApplicantController extends Controller
                 'rc_number' => 'nullable',
                 'address' => 'nullable',
                 'document'=> 'nullable',
+
+                'evidence_of_cac'=> 'nullable',
+                'company_income_tax'=> 'nullable',
+                'audited_account'=> 'nullable',
+                'letter_of_authorization'=> 'nullable',
+                'sworn_affidavits'=> 'nullable',
             ]);
+
+            $evidence_of_cac = '';
 
             if ($validator->fails()) {
                 return response()->json([
@@ -200,17 +208,96 @@ class ApplicantController extends Controller
                 $fileNameToStore = $fileName."_".time().".".$fileExt;
                 $request->file("document")->storeAs("public/jvFiles", $fileNameToStore);
 
-                $url = url('/storage/jvFiles/'.$fileNameToStore);
+                $document = url('/storage/jvFiles/'.$fileNameToStore);
             }else{
-                $url = '';
+                $document = '';
             }
 
-            // $user = Applicant::where('id',$request->user()->id)->update($request->all());
+            if ($request->hasFile("evidence_of_cac")) {
+                $fileNameWExt = $request->file("evidence_of_cac")->getClientOriginalName();
+                $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+                $fileExt = $request->file("evidence_of_cac")->getClientOriginalExtension();
+                $fileNameToStore = $fileName."_".time().".".$fileExt;
+                $request->file("evidence_of_cac")->storeAs("public/jvFiles", $fileNameToStore);
+
+                $evidence_of_cac = url('/storage/jvFiles/'.$fileNameToStore);
+            }else{
+                $evidence_of_cac = '';
+            }
+
+            if ($request->hasFile("company_income_tax")) {
+                $fileNameWExt = $request->file("company_income_tax")->getClientOriginalName();
+                $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+                $fileExt = $request->file("company_income_tax")->getClientOriginalExtension();
+                $fileNameToStore = $fileName."_".time().".".$fileExt;
+                $request->file("company_income_tax")->storeAs("public/jvFiles", $fileNameToStore);
+
+                $company_income_tax = url('/storage/jvFiles/'.$fileNameToStore);
+            }else{
+                $company_income_tax = '';
+            }
+
+            if ($request->hasFile("audited_account")) {
+                $fileNameWExt = $request->file("audited_account")->getClientOriginalName();
+                $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+                $fileExt = $request->file("audited_account")->getClientOriginalExtension();
+                $fileNameToStore = $fileName."_".time().".".$fileExt;
+                $request->file("audited_account")->storeAs("public/jvFiles", $fileNameToStore);
+
+                $audited_account = url('/storage/jvFiles/'.$fileNameToStore);
+            }else{
+                $audited_account = '';
+            }
+
+            if ($request->hasFile("letter_of_authorization")) {
+                $fileNameWExt = $request->file("letter_of_authorization")->getClientOriginalName();
+                $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+                $fileExt = $request->file("letter_of_authorization")->getClientOriginalExtension();
+                $fileNameToStore = $fileName."_".time().".".$fileExt;
+                $request->file("letter_of_authorization")->storeAs("public/jvFiles", $fileNameToStore);
+
+                $letter_of_authorization = url('/storage/jvFiles/'.$fileNameToStore);
+            }else{
+                $letter_of_authorization = '';
+            }
+
+            if ($request->hasFile("sworn_affidavits")) {
+                $fileNameWExt = $request->file("sworn_affidavits")->getClientOriginalName();
+                $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+                $fileExt = $request->file("sworn_affidavits")->getClientOriginalExtension();
+                $fileNameToStore = $fileName."_".time().".".$fileExt;
+                $request->file("sworn_affidavits")->storeAs("public/jvFiles", $fileNameToStore);
+
+                $sworn_affidavits = url('/storage/jvFiles/'.$fileNameToStore);
+            }else{
+                $sworn_affidavits = '';
+            }
+
             $request['applicant_id'] = $request->user()->id;
 
-            $request['document'] = $url;
+            // $request['document'] = $document;
+            // $request['evidence_of_cac'] = $evidence_of_cac;
+            // $request['company_income_tax'] = $company_income_tax;
+            // $request['audited_account'] = $audited_account;
+            // $request['letter_of_authorization'] = $letter_of_authorization;
+            // $request['sworn_affidavits'] = $sworn_affidavits;
 
-            $jv = JV::create($request->all());
+            // return $request->all();
+            $jv = JV::create([
+                'applicant_id'=> $request->user()->id,
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'rc_number' => $request->rc_number,
+                'address' => $request->address,
+                'document'=> $document,
+
+                'evidence_of_cac'=> $evidence_of_cac,
+                'company_income_tax'=> $company_income_tax,
+                'audited_account'=> $audited_account,
+                'letter_of_authorization'=> $letter_of_authorization,
+                'sworn_affidavits'=> $sworn_affidavits,
+            ]);
 
             if ($jv) {
                 
@@ -248,6 +335,12 @@ class ApplicantController extends Controller
                 'rc_number' => 'nullable',
                 'address' => 'nullable',
                 'document'=> 'nullable',
+
+                'evidence_of_cac'=> 'nullable',
+                'company_income_tax'=> 'nullable',
+                'audited_account'=> 'nullable',
+                'letter_of_authorization'=> 'nullable',
+                'sworn_affidavits'=> 'nullable',
             ]);
 
             if ($validator->fails()) {
@@ -264,15 +357,92 @@ class ApplicantController extends Controller
                 $fileNameToStore = $fileName."_".time().".".$fileExt;
                 $request->file("document")->storeAs("public/jvFiles", $fileNameToStore);
 
-                $url = url('/storage/jvFiles/'.$fileNameToStore);
+                $document = url('/storage/jvFiles/'.$fileNameToStore);
             }else{
-                $url = '';
+                $document = '';
             }
 
+            if ($request->hasFile("evidence_of_cac")) {
+                $fileNameWExt = $request->file("evidence_of_cac")->getClientOriginalName();
+                $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+                $fileExt = $request->file("evidence_of_cac")->getClientOriginalExtension();
+                $fileNameToStore = $fileName."_".time().".".$fileExt;
+                $request->file("evidence_of_cac")->storeAs("public/jvFiles", $fileNameToStore);
 
-            $request['document'] = $url;
+                $evidence_of_cac = url('/storage/jvFiles/'.$fileNameToStore);
+            }else{
+                $evidence_of_cac = '';
+            }
 
-            $jv = JV::where(['id'=>$id, 'applicant_id'=>$request->user()->id])->update($request->all());
+            if ($request->hasFile("company_income_tax")) {
+                $fileNameWExt = $request->file("company_income_tax")->getClientOriginalName();
+                $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+                $fileExt = $request->file("company_income_tax")->getClientOriginalExtension();
+                $fileNameToStore = $fileName."_".time().".".$fileExt;
+                $request->file("company_income_tax")->storeAs("public/jvFiles", $fileNameToStore);
+
+                $company_income_tax = url('/storage/jvFiles/'.$fileNameToStore);
+            }else{
+                $company_income_tax = '';
+            }
+
+            if ($request->hasFile("audited_account")) {
+                $fileNameWExt = $request->file("audited_account")->getClientOriginalName();
+                $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+                $fileExt = $request->file("audited_account")->getClientOriginalExtension();
+                $fileNameToStore = $fileName."_".time().".".$fileExt;
+                $request->file("audited_account")->storeAs("public/jvFiles", $fileNameToStore);
+
+                $audited_account = url('/storage/jvFiles/'.$fileNameToStore);
+            }else{
+                $audited_account = '';
+            }
+
+            if ($request->hasFile("letter_of_authorization")) {
+                $fileNameWExt = $request->file("letter_of_authorization")->getClientOriginalName();
+                $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+                $fileExt = $request->file("letter_of_authorization")->getClientOriginalExtension();
+                $fileNameToStore = $fileName."_".time().".".$fileExt;
+                $request->file("letter_of_authorization")->storeAs("public/jvFiles", $fileNameToStore);
+
+                $letter_of_authorization = url('/storage/jvFiles/'.$fileNameToStore);
+            }else{
+                $letter_of_authorization = '';
+            }
+
+            if ($request->hasFile("sworn_affidavits")) {
+                $fileNameWExt = $request->file("sworn_affidavits")->getClientOriginalName();
+                $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+                $fileExt = $request->file("sworn_affidavits")->getClientOriginalExtension();
+                $fileNameToStore = $fileName."_".time().".".$fileExt;
+                $request->file("sworn_affidavits")->storeAs("public/jvFiles", $fileNameToStore);
+
+                $sworn_affidavits = url('/storage/jvFiles/'.$fileNameToStore);
+            }else{
+                $sworn_affidavits = '';
+            }
+
+            // $request['document'] = $document;
+            // $request['evidence_of_cac'] = $evidence_of_cac;
+            // $request['company_income_tax'] = $company_income_tax;
+            // $request['audited_account'] = $audited_account;
+            // $request['letter_of_authorization'] = $letter_of_authorization;
+            // $request['sworn_affidavits'] = $sworn_affidavits;
+
+            $jv = JV::where(['id'=>$id, 'applicant_id'=>$request->user()->id])->update([
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'rc_number' => $request->rc_number,
+                'address' => $request->address,
+                'document'=> $document,
+
+                'evidence_of_cac'=> $evidence_of_cac,
+                'company_income_tax'=> $company_income_tax,
+                'audited_account'=> $audited_account,
+                'letter_of_authorization'=> $letter_of_authorization,
+                'sworn_affidavits'=> $sworn_affidavits,
+            ]);
 
             if ($jv) {
                 

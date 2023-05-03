@@ -17,9 +17,17 @@ return new class extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('phone');
+            $table->string('type')->nullable();
             $table->string('address')->nullable();
             $table->string('rc_number')->nullable();
             $table->string('document')->nullable();
+
+            $table->string('evidence_of_cac')->nullable();
+            $table->string('company_income_tax')->nullable();
+            $table->string('audited_account')->nullable();
+            $table->string('letter_of_authorization')->nullable();
+            $table->string('sworn_affidavits')->nullable();
+            
             $table->timestamps();
         });
     }

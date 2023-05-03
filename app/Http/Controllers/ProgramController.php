@@ -357,4 +357,10 @@ class ProgramController extends Controller
             ], 404);
         }
     }
+
+
+    public function getApplications(Request $request)
+    {
+        
+    }
 }

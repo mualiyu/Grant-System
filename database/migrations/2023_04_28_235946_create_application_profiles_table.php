@@ -16,12 +16,12 @@ return new class extends Migration
             $table->unsignedBigInteger('applicant_id')->unsigned();
             $table->unsignedBigInteger('application_id')->unsigned();
             $table->string('name');
-            $table->string('registration_date');
-            $table->string('cac_number');
-            $table->string('address');
+            $table->string('registration_date')->nullable();
+            $table->string('cac_number')->nullable();
+            $table->string('address')->nullable();
             $table->string('description')->nullable();
             $table->string('website')->nullable();
-            $table->string('owner');
+            $table->string('owner')->nullable();
             $table->string('authorised_personel')->nullable();
             $table->timestamps();
         });

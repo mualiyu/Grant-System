@@ -21,7 +21,13 @@ class JV extends Model
         'email',
         'rc_number',
         'address',
+        'type',
         'document',
+        'evidence_of_cac',
+        'company_income_tax',
+        'audited_account',
+        'letter_of_authorization',
+        'sworn_affidavits',
         'applicant_id',
     ];
 

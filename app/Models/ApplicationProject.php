@@ -27,13 +27,14 @@ class ApplicationProject extends Model
         'date_of_completion',
         'project_cost',
         'role_of_applicant',
-        'equity',
-        'implemented',
+        // 'equity',
+        // 'implemented',
+        'geocoordinate',
         'subcontactor_role',
         'award_letter',
         'interim_valuation_cert',
         'certificate_of_completion',
-        'evidence_of_equity',
+        // 'evidence_of_equity',
     ];
 
     public function application(): BelongsTo

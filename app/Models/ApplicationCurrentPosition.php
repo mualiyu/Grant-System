@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ApplicationEmployer extends Model
+class ApplicationCurrentPosition extends Model
 {
     use HasFactory;
 
@@ -17,11 +17,9 @@ class ApplicationEmployer extends Model
      */
     protected $fillable = [
         'application_cv_id',
-        'name',
         'position',
-        'start',
-        'end',
         'description',
+        'start',
     ];
 
     public function application_cv(): BelongsTo

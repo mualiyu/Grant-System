@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Application;
+use App\Models\ApplicationCurrentPosition;
 use App\Models\ApplicationCv;
 use App\Models\ApplicationDocument;
 use App\Models\ApplicationEducation;
@@ -91,7 +92,7 @@ class ApplicationController extends Controller
                 'website'=> 'nullable',
                 // 'cac_number'=> 'required',
                 'share_holders'=> 'nullable',
-                'ultimate_owner'=> 'required',
+                'ultimate_owner'=> 'nullable',
                 'contact_person'=> 'nullable',
             ]);
     
@@ -199,9 +200,9 @@ class ApplicationController extends Controller
                     if (count($staff)>0) {
                         foreach ($staff as $s) {
                             ApplicationEmployer::where("application_cv_id", $s->id)->delete();
-                            ApplicationEducation::where("application_cv_id", $s->id)->delete();
+                            // ApplicationEducation::where("application_cv_id", $s->id)->delete();
                             ApplicationMembership::where("application_cv_id", $s->id)->delete();
-                            ApplicationTraining::where("application_cv_id", $s->id)->delete();
+                            ApplicationCurrentPosition::where("application_cv_id", $s->id)->delete();
                         }
                         ApplicationCv::where('application_id', $request->application_id)->delete();
                     }
@@ -211,13 +212,14 @@ class ApplicationController extends Controller
                     $staff_create = ApplicationCv::create([
                         'application_id'=>$request->application_id,
                         'name'=>$staff['name'],
-                        'dob'=>$staff['dob'],
+                        // 'dob'=>$staff['dob'],
                         'language'=>$staff['language'],
-                        'nationality'=>$staff['nationality'],
-                        'countries_experience'=>$staff['countries_experience'],
-                        'work_undertaken'=>$staff['work_undertaken'],
+                        // 'nationality'=>$staff['nationality'],
+                        // 'countries_experience'=>$staff['countries_experience'],
+                        // 'work_undertaken'=>$staff['work_undertaken'],
                         'education_certificate'=>$staff['education_certificate'],
                         'professional_certificate'=>$staff['professional_certificate'],
+                        'cv'=>$staff['cv'],
                     ]);
                     // Employer
                     if (count($staff['employer'])>0) {
@@ -228,22 +230,37 @@ class ApplicationController extends Controller
                                 'position'=>$emp['position'],
                                 'start'=>$emp['start_date'],
                                 'end'=>$emp['end_date'],
+                                'description'=>$emp['description'],
                             ]);
                         }
                     }
 
                     // Education
-                    if (count($staff['education'])>0) {
-                        foreach ($staff['education'] as $edu) {
-                            ApplicationEducation::create([
+                    // if (count($staff['education'])>0) {
+                    //     foreach ($staff['education'] as $edu) {
+                    //         ApplicationEducation::create([
+                    //             'application_cv_id'=>$staff_create->id,
+                    //             'qualification'=>$edu['qualification'],
+                    //             'course'=>$edu['course'],
+                    //             'school'=> $edu['school'],
+                    //             'start'=>$edu['start_date'],
+                    //             'end'=>$edu['end_date'],
+                    //         ]);
+                    //     }
+                    // }
+
+                    // Curent position
+                    if ($staff['current_position']) {
+                        // foreach ($staff['current_position'] as $edu) {
+                            $cp = $staff['current_position'];
+
+                            ApplicationCurrentPosition::create([
                                 'application_cv_id'=>$staff_create->id,
-                                'qualification'=>$edu['qualification'],
-                                'course'=>$edu['course'],
-                                'school'=> $edu['school'],
-                                'start'=>$edu['start_date'],
-                                'end'=>$edu['end_date'],
+                                'position'=>$cp['position'],
+                                'start'=>$cp['start_date'],
+                                'description'=>$cp['description'],
                             ]);
-                        }
+                        // }
                     }
 
                     // membership
@@ -259,15 +276,15 @@ class ApplicationController extends Controller
                     }
 
                     // training
-                    if (count($staff['training'])>0) {
-                        foreach ($staff['training'] as $tr) {
-                            ApplicationTraining::create([
-                                'application_cv_id'=>$staff_create->id,
-                                'course'=>$tr['course'],
-                                'date'=>$tr['date'],
-                            ]);
-                        }
-                    }
+                    // if (count($staff['training'])>0) {
+                    //     foreach ($staff['training'] as $tr) {
+                    //         ApplicationTraining::create([
+                    //             'application_cv_id'=>$staff_create->id,
+                    //             'course'=>$tr['course'],
+                    //             'date'=>$tr['date'],
+                    //         ]);
+                    //     }
+                    // }
 
                 }
 
@@ -338,13 +355,14 @@ class ApplicationController extends Controller
                         'date_of_completion'=>$project['date_of_completion'],
                         'project_cost'=>$project['project_cost'],
                         'role_of_applicant'=>$project['role_of_applicant'],
-                        'equity'=>$project['equity'],
-                        'implemented'=>$project['implemented'],
+                        // 'equity'=>$project['equity'],
+                        // 'implemented'=>$project['implemented'],
+                        'geocoordinate'=>$project['geocoordinate'],
                         'subcontactor_role'=>$project['subcontractor_role'],
                         'award_letter'=>$project['award_letter'],
                         'interim_valuation_cert'=>$project['interim_valuation_cert'],
                         'certificate_of_completion'=>$project['certificate_of_completion'],
-                        'evidence_of_equity'=>$project['evidence_of_equity'],
+                        // 'evidence_of_equity'=>$project['evidence_of_equity'],
                     ]);
 
                     // Referees
@@ -440,9 +458,10 @@ class ApplicationController extends Controller
                 'sector'=> $dept['sector'],
                 'aggregate_amount'=> $dept['aggregate_amount'],
                 'date_of_financial_close'=> $dept['date_of_financial_close'],
-                'date_of_first_drawdown'=> $dept['date_of_first_drawdown'],
-                'date_of_final_drawdown'=> $dept['date_of_final_drawdown'],
-                'tenor_of_financing'=> $dept['tenor_of_financing'],
+                // 'date_of_first_drawdown'=> $dept['date_of_first_drawdown'],
+                // 'date_of_final_drawdown'=> $dept['date_of_final_drawdown'],
+                // 'tenor_of_financing'=> $dept['tenor_of_financing'],
+                'evidence_of_support'=> $dept['evidence_of_support'],
             ]);
 
             $borrower = ApplicationFinancialDebtInfoBorrower::create([
@@ -651,6 +670,52 @@ class ApplicationController extends Controller
         }
     }
 
+    public function uploadFinancial(Request $request)
+    {
+        if ($request->user()->tokenCan('Applicant')) {
+
+            $validator = Validator::make($request->all(), [
+                'file' => 'required|max:9000',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first()
+                ], 422);
+            }
+            
+            if ($request->hasFile("file")) {
+                $fileNameWExt = $request->file("file")->getClientOriginalName();
+                $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+                $fileExt = $request->file("file")->getClientOriginalExtension();
+                $fileNameToStore = $fileName."_".time().".".$fileExt;
+                $request->file("file")->storeAs("public/financialFiles", $fileNameToStore);
+
+                $url = url('/storage/financialFiles/'.$fileNameToStore);
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "File is successfully uploaded.",
+                    'data' => [
+                        'url' => $url,
+                    ],
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message' => "Error! file upload invalid. Try again."
+                ], 422);
+            }
+
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }
+    }
+
     public function submit(Request $request)
     {
         if ($request->user()->tokenCan('Applicant')) {
@@ -709,7 +774,7 @@ class ApplicationController extends Controller
                 $app = $app[0];
 
                 $app_profile = ApplicationProfile::where(["application_id"=>$app->id])->with('contact_persons')->with('share_holders')->get();
-                $app_staff = ApplicationCv::where(["application_id"=>$app->id])->with('educations')->with('memberships')->with('trainings')->with('employers')->get();
+                $app_staff = ApplicationCv::where(["application_id"=>$app->id])->with('memberships')->with('employers')->get();
 
                 $app_projects = ApplicationProject::where(["application_id"=>$app->id])->with('referees')->with('sub_contractors')->get();
                 

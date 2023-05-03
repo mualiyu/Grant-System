@@ -23,10 +23,10 @@ class ApplicationFinancialDebtInfo extends Model
         'sector',
         'aggregate_amount',
         'date_of_financial_close',
-        'date_of_first_drawdown',
-        'date_of_final_drawdown',
-        'tenor_of_financing',
-        // '',
+        // 'date_of_first_drawdown',
+        // 'date_of_final_drawdown',
+        // 'tenor_of_financing',
+        'evidence_of_support ',
     ];
 
     public function application(): BelongsTo

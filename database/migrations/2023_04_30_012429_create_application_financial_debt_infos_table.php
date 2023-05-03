@@ -19,9 +19,10 @@ return new class extends Migration
             $table->string('sector')->nullable();
             $table->string('aggregate_amount')->nullable();
             $table->string('date_of_financial_close')->nullable();
-            $table->string('date_of_first_drawdown')->nullable();
-            $table->string('date_of_final_drawdown')->nullable();
-            $table->string('tenor_of_financing')->nullable();
+            // $table->string('date_of_first_drawdown')->nullable();
+            // $table->string('date_of_final_drawdown')->nullable();
+            // $table->string('tenor_of_financing')->nullable();
+            $table->string('evidence_of_support')->nullable();
             $table->timestamps();
         });
     }

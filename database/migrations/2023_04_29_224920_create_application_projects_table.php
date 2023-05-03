@@ -23,13 +23,13 @@ return new class extends Migration
             $table->string('date_of_completion')->nullable();
             $table->string('project_cost');
             $table->string('role_of_applicant');
-            $table->string('equity')->nullable();
-            $table->string('implemented')->nullable();
+            $table->string('geocoordinate')->nullable();
+            // $table->string('implemented')->nullable();
             $table->string('subcontactor_role')->nullable();
             $table->string('award_letter')->nullable();
             $table->string('interim_valuation_cert')->nullable();
             $table->string('certificate_of_completion')->nullable();
-            $table->string('evidence_of_equity')->nullable();
+            // $table->string('evidence_of_equity')->nullable();
             $table->timestamps();
         });
     }

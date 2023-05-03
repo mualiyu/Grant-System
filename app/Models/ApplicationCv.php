@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ApplicationCv extends Model
 {
@@ -19,13 +20,14 @@ class ApplicationCv extends Model
     protected $fillable = [
         'application_id',
         'name',
-        'dob',
+        // 'dob',
         'language',
-        'nationality',
-        'countries_experience',
-        'work_undertaken',
+        // 'nationality',
+        // 'countries_experience',
+        // 'work_undertaken',
         'education_certificate',
         'professional_certificate',
+        'cv',
     ];
 
     public function application(): BelongsTo
@@ -33,23 +35,28 @@ class ApplicationCv extends Model
         return $this->belongsTo(Application::class, "application_id", 'id');
     }
 
-    public function educations(): HasMany
+    // public function educations(): HasMany
+    // {
+    //     return $this->hasMany(ApplicationEducation::class, "application_cv_id", 'id');
+    // }
+
+    public function memberships(): HasOne
     {
-        return $this->hasMany(ApplicationEducation::class, "application_cv_id", 'id');
+        return $this->hasOne(ApplicationMembership::class, "application_cv_id", 'id');
     }
 
-    public function memberships(): HasMany
-    {
-        return $this->hasMany(ApplicationMembership::class, "application_cv_id", 'id');
-    }
-
-    public function trainings(): HasMany
-    {
-        return $this->hasMany(ApplicationTraining::class, "application_cv_id", 'id');
-    }
+    // public function trainings(): HasMany
+    // {
+    //     return $this->hasMany(ApplicationTraining::class, "application_cv_id", 'id');
+    // }
 
     public function employers(): HasMany
     {
         return $this->hasMany(ApplicationEmployer::class, "application_cv_id", 'id');
+    }
+
+    public function current_position(): HasOne
+    {
+        return $this->hasOne(ApplicationCurrentPosition::class, "application_cv_id", 'id');
     }
 }
