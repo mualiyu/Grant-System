@@ -184,6 +184,7 @@ class ApplicantController extends Controller
                 'rc_number' => 'nullable',
                 'address' => 'nullable',
                 'document'=> 'nullable',
+                'type'=> 'nullable',
 
                 'evidence_of_cac'=> 'nullable',
                 'company_income_tax'=> 'nullable',
@@ -291,6 +292,7 @@ class ApplicantController extends Controller
                 'rc_number' => $request->rc_number,
                 'address' => $request->address,
                 'document'=> $document,
+                'type'=> $request->type,
 
                 'evidence_of_cac'=> $evidence_of_cac,
                 'company_income_tax'=> $company_income_tax,
@@ -335,6 +337,7 @@ class ApplicantController extends Controller
                 'rc_number' => 'nullable',
                 'address' => 'nullable',
                 'document'=> 'nullable',
+                'type'=>'nullable',
 
                 'evidence_of_cac'=> 'nullable',
                 'company_income_tax'=> 'nullable',
@@ -436,6 +439,7 @@ class ApplicantController extends Controller
                 'rc_number' => $request->rc_number,
                 'address' => $request->address,
                 'document'=> $document,
+                'type'=> $request->type,
 
                 'evidence_of_cac'=> $evidence_of_cac,
                 'company_income_tax'=> $company_income_tax,
