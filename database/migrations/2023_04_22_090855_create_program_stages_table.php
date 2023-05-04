@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('start');
             $table->string('end');
+            $table->string('document')->nullable();
+            $table->string('isActive')->nullable();
             $table->timestamps();
         });
     }

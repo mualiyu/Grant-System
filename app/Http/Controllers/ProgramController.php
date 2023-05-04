@@ -92,6 +92,7 @@ class ProgramController extends Controller
                             'start' => $st['startDate'],
                             'end' => $st['endDate'],
                             'description' => $st['description'],
+                            'document' => $st['document'],
                             'program_id' => $program->id,
                             'isActive' => '1',
                         ]);

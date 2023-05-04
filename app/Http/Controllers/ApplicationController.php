@@ -35,7 +35,8 @@ class ApplicationController extends Controller
                 'program_id' => 'required',
                 'sublots'=> 'required',
                 'update' => 'nullable',
-                'application_id' => 'nullable'
+                'application_id' => 'nullable',
+                // 'choice'=>'nullable',
                 
             ]);
     
@@ -62,6 +63,7 @@ class ApplicationController extends Controller
                 DB::table('application_sub_lot')->insert([
                     'application_id'=>$application->id,
                     'sub_lot_id'=>$sub['id'],
+                    'choice'=>$sub['choice'],
                 ]);
                 
             }
@@ -228,7 +230,7 @@ class ApplicationController extends Controller
                 'update'=>'nullable',
                 'application_id'=>'required',
                 'staff' => 'required',
-                'choice' => 'nullable',
+                // 'choice' => 'nullable',
             ]);
     
             if ($validator->fails()) {
@@ -866,7 +868,7 @@ class ApplicationController extends Controller
                 $app = $app[0];
 
                 $app_profile = ApplicationProfile::where(["application_id"=>$app->id])->with('contact_persons')->with('share_holders')->get();
-                $app_staff = ApplicationCv::where(["application_id"=>$app->id])->with('employers')->get();
+                $app_staff = ApplicationCv::where(["application_id"=>$app->id])->with('employers')->with('current_position')->get();
 
                 $app_projects = ApplicationProject::where(["application_id"=>$app->id])->with('referees')->with('sub_contractors')->get();
                 
