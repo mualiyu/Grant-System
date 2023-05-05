@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('program_id');
             $table->unsignedBigInteger('lot_id');
             $table->unsignedBigInteger('category_id');
-            $table->string('name');
+            $table->longText('name')->nullable();
             $table->string('category')->nullable();
             $table->timestamps();
         });

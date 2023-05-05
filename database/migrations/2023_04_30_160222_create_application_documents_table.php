@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('application_id');
             $table->longText('name');
-            $table->string('url');
+            $table->longText('url');
             $table->timestamps();
         });
     }

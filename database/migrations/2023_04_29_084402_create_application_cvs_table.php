@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('application_cvs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('application_id');
-            $table->string('name');
+            $table->longText('name');
             // $table->string('dob');
-            $table->string('language')->nullable();
+            $table->longText('language')->nullable();
             $table->string('membership')->nullable();
             // $table->string('countries_experience');
             // $table->longText('work_undertaken')->nullable();

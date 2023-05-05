@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('position');
             $table->string('start');
             $table->string('end');
-            $table->string('description');
+            $table->longText('description');
             $table->timestamps();
         });
     }

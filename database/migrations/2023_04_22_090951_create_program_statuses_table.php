@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('program_statuses', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('program_id');
-            $table->string('name');
+            $table->longText('name');
             $table->string('isInitial')->nullable();
             $table->string('isEditable')->nullable();
-            $table->string('color');
+            $table->longText('color')->nullable();
             $table->timestamps();
         });
     }

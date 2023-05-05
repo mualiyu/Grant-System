@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('application_projects', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('application_id');
-            $table->string('name');
-            $table->string('address');
+            $table->longText('name');
+            $table->longText('address');
             $table->string('date_of_contract')->nullable();
-            $table->string('employer');
+            $table->longText('employer');
             $table->string('location');
             $table->longText('description');
             $table->string('date_of_completion')->nullable();
             $table->string('project_cost');
             $table->string('role_of_applicant');
-            $table->string('geocoordinate')->nullable();
+            $table->longText('geocoordinate')->nullable();
             // $table->string('implemented')->nullable();
             $table->string('subcontactor_role')->nullable();
             $table->string('award_letter')->nullable();

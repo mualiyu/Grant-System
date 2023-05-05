@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('application_financial_debt_infos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('application_id');
-            $table->string('project_name');
-            $table->string('location');
+            $table->longText('project_name');
+            $table->longText('location');
             $table->string('sector')->nullable();
             $table->string('aggregate_amount')->nullable();
             $table->string('date_of_financial_close')->nullable();

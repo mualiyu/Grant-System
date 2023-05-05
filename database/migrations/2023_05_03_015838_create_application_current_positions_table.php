@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('application_current_positions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('application_cv_id');
-            $table->string('position');
+            $table->longText('position');
             $table->string('start');
             $table->longText('description');
             $table->timestamps();

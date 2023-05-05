@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('program_id');
             // $table->unsignedBigInteger('region_id');
-            $table->string('name');
-            $table->string('description')->nullable();
-            $table->string('start');
-            $table->string('end');
+            $table->longText('name');
+            $table->longText('description')->nullable();
+            $table->string('start')->nullable();
+            $table->string('end')->nullable();
             $table->string('document')->nullable();
             $table->string('isActive')->nullable();
             $table->timestamps();

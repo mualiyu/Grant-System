@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->string('address')->nullable();
             $table->string('rc_number')->nullable();
-            $table->string('document')->nullable();
+            $table->longText('document')->nullable();
 
             $table->string('evidence_of_cac')->nullable();
             $table->string('company_income_tax')->nullable();

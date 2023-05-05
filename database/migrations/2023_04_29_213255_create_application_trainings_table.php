@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('application_trainings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('application_cv_id');
-            $table->string('course');
+            $table->longText('course');
             $table->string('date');
             $table->timestamps();
         });
