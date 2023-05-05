@@ -284,6 +284,7 @@ class ProgramController extends Controller
                     "startDate"=>$s->start,
                     "endDate"=>$s->end,
                     "description"=>$s->description,
+                    "document"=>$s->document,
                 ];
                 array_push($arr['program']['stages'],$ass);
             }
