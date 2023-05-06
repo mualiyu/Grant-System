@@ -229,7 +229,7 @@ class ApplicationController extends Controller
             $validator = Validator::make($request->all(), [
                 'update'=>'nullable',
                 'application_id'=>'required',
-                'staff' => 'required',
+                'staff' => 'nullable',
                 // 'choice' => 'nullable',
             ]);
     
@@ -368,7 +368,7 @@ class ApplicationController extends Controller
             $validator = Validator::make($request->all(), [
                 'update'=>'nullable',
                 'application_id'=>'required',
-                'projects' => 'required',
+                'projects' => 'nullable',
             ]);
     
             if ($validator->fails()) {
