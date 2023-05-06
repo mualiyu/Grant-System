@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('j_v_s', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('applicant_id');
-            $table->string('name');
-            $table->string('email');
-            $table->string('phone');
+            $table->string('name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
             $table->string('type')->nullable();
             $table->string('address')->nullable();
             $table->string('rc_number')->nullable();

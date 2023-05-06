@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('application_education', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('application_cv_id');
-            $table->string('qualification');
-            $table->string('course');
-            $table->string('school');
-            $table->string('start');
-            $table->string('end');
+            $table->string('qualification')->nullable();
+            $table->string('course')->nullable();
+            $table->string('school')->nullable();
+            $table->string('start')->nullable();
+            $table->string('end')->nullable();
             $table->timestamps();
         });
     }

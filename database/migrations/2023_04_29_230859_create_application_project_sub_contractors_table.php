@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('application_project_sub_contractors', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('application_project_id');
-            $table->string('name');
-            $table->string('address');
+            $table->string('name')->nullable();
+            $table->string('address')->nullable();
             $table->timestamps();
         });
     }

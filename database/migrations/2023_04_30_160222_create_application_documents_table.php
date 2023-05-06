@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('application_documents', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('application_id');
-            $table->longText('name');
-            $table->longText('url');
+            $table->longText('name')->nullable();
+            $table->longText('url')->nullable();
             $table->timestamps();
         });
     }

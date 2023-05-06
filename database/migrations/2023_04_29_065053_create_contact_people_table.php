@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('contact_people', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('app_prof_id')->unsigned();
-            $table->string('name');
-            $table->string('phone');
-            $table->string('email');
+            $table->string('name')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
             $table->longText('address')->nullable();
             $table->timestamps();
         });

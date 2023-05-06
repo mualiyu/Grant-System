@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('program_requirements', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('program_id');
-            $table->longText('name');
-            $table->string('type');
+            $table->longText('name')->nullable();
+            $table->string('type')->nullable();
             $table->timestamps();
         });
     }

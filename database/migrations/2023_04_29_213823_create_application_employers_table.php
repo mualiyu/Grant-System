@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('application_employers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('application_cv_id');
-            $table->string('name');
-            $table->string('position');
-            $table->string('start');
-            $table->string('end');
-            $table->longText('description');
+            $table->string('name')->nullable();
+            $table->string('position')->nullable();
+            $table->string('start')->nullable();
+            $table->string('end')->nullable();
+            $table->longText('description')->nullable();
             $table->timestamps();
         });
     }

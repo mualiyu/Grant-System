@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('application_memberships', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('application_cv_id');
-            $table->string('rank');
-            $table->string('state');
-            $table->string('date');
+            $table->string('rank')->nullable();
+            $table->string('state')->nullable();
+            $table->string('date')->nullable();
             $table->timestamps();
         });
     }
