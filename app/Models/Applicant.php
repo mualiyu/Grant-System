@@ -47,5 +47,10 @@ class Applicant extends Model
     {
         return $this->hasMany(Application::class, "applicant_id", 'id');
     }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class, "applicant_id", 'id');
+    }
     
 }

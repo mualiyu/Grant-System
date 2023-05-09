@@ -81,6 +81,15 @@ Route::prefix('admin')->group(function () {
     
     });
 
+    // Messages
+    Route::middleware('auth:sanctum')->prefix('messages')->group(function () {
+        # get
+        Route::get('{program}', [\App\Http\Controllers\MessageController::class, 'getAll']);
+
+        # send
+        Route::post('{program}', [\App\Http\Controllers\MessageController::class, 'adminSend']);
+    });
+
 });
 
 
@@ -177,5 +186,14 @@ Route::prefix('applicant')->group(function () {
 
         #Get application
         Route::get('get', [\App\Http\Controllers\ApplicationController::class, 'getApplication']);
+    });
+
+    // Messages
+    Route::middleware('auth:sanctum')->prefix('messages')->group(function () {
+        # get
+        Route::get('{program}', [\App\Http\Controllers\MessageController::class, 'applicantGetAll']);
+
+        # send
+        Route::post('{program}', [\App\Http\Controllers\MessageController::class, 'applicantSend']);
     });
 });

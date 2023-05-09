@@ -54,4 +54,9 @@ class Program extends Model
     {
         return $this->hasMany(Application::class, "program_id", 'id');
     }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class, "program_id", 'id');
+    }
 }
