@@ -28,14 +28,14 @@
                   <td style="padding:0 0 36px 0;color:#153643;">
                     <h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">{{ $mailData['title'] }}</h1>
                     <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">{{ $mailData['body'] }}</p>
-                    <p style="margin:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;"><a href="https://applicant.grants.amp.gefundp.rea.gov.ng/" style="color:#ee4c50;text-decoration:underline;">Click here to view your message!</a></p>
+                    <p style="margin:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;"><a href="https://applicant.grants.amp.gefundp.rea.gov.ng/" style="color:#153643;text-decoration:underline;">Click here to view your message!</a></p>
                   </td>
                 </tr>
               </table>
             </td>
           </tr>
           <tr>
-            <td style="padding:30px;background:#ee4c50;">
+            <td style="padding:30px;background:#198754;">
               <table role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;font-size:9px;font-family:Arial,sans-serif;">
                 <tr>
                   <td style="padding:0;width:50%;" align="left">
