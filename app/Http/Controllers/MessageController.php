@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\MessageNotificationMail;
 use App\Models\Applicant;
 use App\Models\Message;
 use App\Models\Program;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class MessageController extends Controller
@@ -61,6 +63,8 @@ class MessageController extends Controller
                 'file' => 'nullable|max:9000',
             ]);
 
+            $applicant = Applicant::find($request->applicant_id);
+
             if ($validator->fails()) {
                 return response()->json([
                     'status' => false,
@@ -89,6 +93,13 @@ class MessageController extends Controller
                 'status'=>'0',
                 'file'=>$urlFile,
             ]);
+
+            $mailData = [
+                'title' => 'Message Notification',
+                'body' => "Dear $applicant->name, \nYou have a new message from Admin, kindly check the message tab in the Program home of which you applied for, \nThank you.",
+            ];
+            
+            Mail::to($applicant->email)->send(new MessageNotificationMail($mailData));
 
             return response()->json([
                 'status' => true,
