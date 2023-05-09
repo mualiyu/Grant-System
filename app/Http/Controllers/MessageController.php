@@ -22,6 +22,7 @@ class MessageController extends Controller
                     array_push($app, $m->applicant_id);
                  }
                  $as = array_unique($app);
+                 $aa = [];
                  foreach ($as as $a) {
                      $applicant = Applicant::find($a);
 
@@ -37,8 +38,17 @@ class MessageController extends Controller
                         'lastMessage'=> $appMsg[0]->created_at,
                         'messages'=> $appMsg,
                      ];
-                     return $applicantMessage;
+                     array_push($aa, $applicantMessage);
+
                  }
+
+                 return response()->json([
+                     'status' => true,
+                     'message' => "success you have about ". count($aa). " users in your chat history",
+                     'data' => [
+                         'message' => $aa,
+                     ],
+                 ]);
              }else {
                 return response()->json([
                     'status' => false,
