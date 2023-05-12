@@ -132,7 +132,6 @@ class ApplicantController extends Controller
             ]);
 
             if ($update) {
-                # code...
                 return response()->json([
                     'status' => true,
                     'message' => "An email is sent to your mail. Thank you!"
@@ -177,7 +176,6 @@ class ApplicantController extends Controller
                         ]);
             
                         if ($update) {
-                            # code...
                             return response()->json([
                                 'status' => true,
                                 'message' => "You've successfully changed your password."
