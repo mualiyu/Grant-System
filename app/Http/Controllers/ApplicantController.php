@@ -130,8 +130,8 @@ class ApplicantController extends Controller
             ]);
                 
             if ($update) {
-                return "Your username is: ".$user->username." & password is: ".$pass;
-                
+                // return "Your username is: ".$user->username." & password is: ".$pass;
+
                 Mail::to($user->email)->send(new AcceptApplicantMail($mailData));
                 return response()->json([
                     'status' => true,
