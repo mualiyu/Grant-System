@@ -206,4 +206,37 @@ class MessageController extends Controller
             ], 404);
         }
     }
+
+    public function applicantReadMsg(Request $request, Program $program)
+    {
+        if ($request->user()->tokenCan('Applicant')) {
+            
+            $msg = Message::where(['applicant_id'=>$request->user()->id, 'program_id'=>$program->id])->update([
+                'status'=>1
+            ]);
+
+            if ($msg) {
+                return response()->json([
+                    'status' => true,
+                    'message' => "Message sent successful.",
+                    'data' => [
+                        'message' => Message::where(['applicant_id'=>$request->user()->id, 'program_id'=>$program->id])->get(),
+                    ],
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message' => "No message found for this user."
+                ], 422);
+            }
+
+
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }
+        
+    }
 }

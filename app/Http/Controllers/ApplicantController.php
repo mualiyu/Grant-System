@@ -99,11 +99,115 @@ class ApplicantController extends Controller
     //recover
     public function recover(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'username' => ['required', 'string', 'max:255'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        $applicant = Applicant::where('username', '=', $request->username)->get();
+
+        if (count($applicant) > 0) {
+
+            $pass = mt_rand(10000000, 99999999);
+
+            $password = Hash::make($pass);
+
+            $user = $applicant[0];
+
+            $mailData = [
+                    'title' => 'Your password reset',
+                    'body' => 'Use Username: ' . $user->username . ' & Password: ' . $pass,
+                ];
+            // return "Your username is: ".$request->username." & password is: ".$pass;
+            Mail::to($user->email)->send(new AcceptApplicantMail($mailData));
+
+            $update = Applicant::where('id', '=', $applicant[0]->id)->update([
+                'password' => Hash::make($password),
+            ]);
+
+            if ($update) {
+                # code...
+                return response()->json([
+                    'status' => true,
+                    'message' => "An email is sent to your mail. Thank you!"
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => "System Error, Failed to change password. Try again later."
+                ], 422);
+            }
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => "Failed, User not found"
+            ], 422);
+        }
     }
 
     //reset
     public function reset(Request $request)
     {
+     if ($request->user()->tokenCan('Applicant')) {
+            $validator = Validator::make($request->all(), [
+                'current_password' => ['required', 'string', 'max:255'],
+                'password' => ['required', 'string', 'min:8', 'confirmed'],
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first()
+                ], 422);
+            }
+
+            $applicant = Applicant::where('id', '=', $request->user()->id)->get();
+
+            if(count($applicant)>0){
+                if (Hash::check($request->current_password, $applicant[0]->password)) {
+
+                        $update = Applicant::where('id', '=', $applicant[0]->id)->update([
+                            'password' => Hash::make($request->password),
+                        ]);
+            
+                        if ($update) {
+                            # code...
+                            return response()->json([
+                                'status' => true,
+                                'message' => "You've successfully changed your password."
+                            ], 200);
+                        }else{
+                            return response()->json([
+                                'status' => false,
+                                'message' => "System Error, Failed to change password. Try again later."
+                            ], 422);
+                        }
+                    
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => "Failed, Password does not match the current password"
+                    ], 422);
+                }
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message' => "Failed, User not found"
+                ], 422);
+            }
+
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }   
     }
 
     //user

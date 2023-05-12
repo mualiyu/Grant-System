@@ -115,7 +115,7 @@ Route::prefix('applicant')->group(function () {
     Route::post('recover', [\App\Http\Controllers\ApplicantController::class, 'recover']);
     
     # reset
-    Route::post('reset', [\App\Http\Controllers\ApplicantController::class, 'reset']);
+    Route::middleware('auth:sanctum')->post('reset', [\App\Http\Controllers\ApplicantController::class, 'reset']);
     
     Route::middleware('auth:sanctum')->prefix('profile')->group(function () {
         Route::get('', [\App\Http\Controllers\ApplicantController::class, 'user']);
@@ -196,5 +196,7 @@ Route::prefix('applicant')->group(function () {
 
         # send
         Route::post('{program}', [\App\Http\Controllers\MessageController::class, 'applicantSend']);
+        # send
+        Route::post('read/{program}', [\App\Http\Controllers\MessageController::class, 'applicantReadMsg']);
     });
 });
