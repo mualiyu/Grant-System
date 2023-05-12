@@ -126,11 +126,12 @@ class ApplicantController extends Controller
                 ];
                 
             $update = Applicant::where('id', '=', $applicant[0]->id)->update([
-                'password' => Hash::make($password),
+                'password' => $password
             ]);
                 
             if ($update) {
-                return "Your username is: ".$request->username." & password is: ".$pass;
+                return "Your username is: ".$user->username." & password is: ".$pass;
+                
                 Mail::to($user->email)->send(new AcceptApplicantMail($mailData));
                 return response()->json([
                     'status' => true,
