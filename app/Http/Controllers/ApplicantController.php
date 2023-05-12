@@ -124,7 +124,7 @@ class ApplicantController extends Controller
                     'title' => 'Your password reset',
                     'body' => 'Use Username: ' . $user->username . ' & Password: ' . $pass,
                 ];
-            // return "Your username is: ".$request->username." & password is: ".$pass;
+            return "Your username is: ".$request->username." & password is: ".$pass;
             Mail::to($user->email)->send(new AcceptApplicantMail($mailData));
 
             $update = Applicant::where('id', '=', $applicant[0]->id)->update([

@@ -218,7 +218,7 @@ class MessageController extends Controller
             if ($msg) {
                 return response()->json([
                     'status' => true,
-                    'message' => "Message sent successful.",
+                    'message' => "All messages are read.",
                     'data' => [
                         'message' => Message::where(['applicant_id'=>$request->user()->id, 'program_id'=>$program->id])->get(),
                     ],
