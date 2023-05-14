@@ -91,7 +91,7 @@ Route::prefix('admin')->group(function () {
         Route::post('{program}', [\App\Http\Controllers\MessageController::class, 'adminSend']);
 
         #update status to read
-        Route::post('read/{program}', [\App\Http\Controllers\MessageController::class, 'adminReadMsg']);
+        Route::post('read/{program}/{applicant}', [\App\Http\Controllers\MessageController::class, 'adminReadMsg']);
 
         Route::get('get-unread/{program}', [\App\Http\Controllers\MessageController::class, 'adminGetUnreadMsg']);
     });
