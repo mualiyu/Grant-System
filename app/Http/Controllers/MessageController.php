@@ -251,7 +251,7 @@ class MessageController extends Controller
                     'status' => true,
                     'message' => "All messages from Applicant are read.",
                     'data' => [
-                        'message' => Message::where(['applicant_id'=>$applicant->id, 'program_id'=>$program->id, 'to'=>'Admin', 'from'=>$request->user()->id])->get(),
+                        'message' => Message::where(['applicant_id'=>$applicant->id, 'program_id'=>$program->id, 'to'=>'Admin', 'from'=>$applicant->id])->get(),
                     ],
                 ]);
             }else{
