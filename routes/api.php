@@ -90,7 +90,7 @@ Route::prefix('admin')->group(function () {
         # send
         Route::post('{program}', [\App\Http\Controllers\MessageController::class, 'adminSend']);
 
-        Route::post('get-unread/{program}', [\App\Http\Controllers\MessageController::class, 'adminGetUnreadMsg']);
+        Route::get('get-unread/{program}', [\App\Http\Controllers\MessageController::class, 'adminGetUnreadMsg']);
     });
 
 });
@@ -203,6 +203,6 @@ Route::prefix('applicant')->group(function () {
         Route::post('read/{program}', [\App\Http\Controllers\MessageController::class, 'applicantReadMsg']);
         
         # gt unread
-        Route::post('get-unread/{program}', [\App\Http\Controllers\MessageController::class, 'applicantGetUnreadMsg']);
+        Route::get('get-unread/{program}', [\App\Http\Controllers\MessageController::class, 'applicantGetUnreadMsg']);
     });
 });
