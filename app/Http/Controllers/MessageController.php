@@ -27,8 +27,8 @@ class MessageController extends Controller
                      $applicant = Applicant::find($a);
 
                      $appMsg = Message::where(['applicant_id'=>$a, 'program_id'=>$program->id])->orderBy('created_at', 'DESC')->get();
-                     $read = Message::where(['applicant_id'=>$a, 'program_id'=>$program->id, 'status'=>'1'])->get();
-                     $unread = Message::where(['applicant_id'=>$a, 'program_id'=>$program->id, 'status'=>'0'])->get();
+                     $read = Message::where(['applicant_id'=>$a, 'program_id'=>$program->id, 'status'=>'1', 'to'=>'Admin'])->get();
+                     $unread = Message::where(['applicant_id'=>$a, 'program_id'=>$program->id, 'status'=>'0', 'to'=>'Admin'])->get();
 
                      $applicantMessage = [
                         'applicantId'=> $a,
