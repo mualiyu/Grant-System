@@ -90,6 +90,9 @@ Route::prefix('admin')->group(function () {
         # send
         Route::post('{program}', [\App\Http\Controllers\MessageController::class, 'adminSend']);
 
+        #update status to read
+        Route::post('read/{program}', [\App\Http\Controllers\MessageController::class, 'adminReadMsg']);
+
         Route::get('get-unread/{program}', [\App\Http\Controllers\MessageController::class, 'adminGetUnreadMsg']);
     });
 

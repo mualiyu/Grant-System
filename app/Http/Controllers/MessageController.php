@@ -238,6 +238,37 @@ class MessageController extends Controller
         
     }
 
+    public function adminReadMsg(Request $request, Program $program, Applicant $applicant)
+    {
+        if ($request->user()->tokenCan('Admin')) {
+            
+            $msg = Message::where(['applicant_id'=>$applicant->id, 'program_id'=>$program->id, 'to'=>'Admin', 'from'=>$request->user()->id])->update([
+                'status'=>1
+            ]);
+
+            if ($msg) {
+                return response()->json([
+                    'status' => true,
+                    'message' => "All messages from Applicant are read.",
+                    'data' => [
+                        'message' => Message::where(['applicant_id'=>$applicant->id, 'program_id'=>$program->id, 'to'=>'Admin', 'from'=>$request->user()->id])->get(),
+                    ],
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message' => "No message found for this user."
+                ], 422);
+            }
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }
+        
+    }
+
     public function applicantGetUnreadMsg(Request $request, Program $program)
     {
         if ($request->user()->tokenCan('Applicant')) {
