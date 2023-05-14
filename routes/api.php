@@ -89,6 +89,8 @@ Route::prefix('admin')->group(function () {
 
         # send
         Route::post('{program}', [\App\Http\Controllers\MessageController::class, 'adminSend']);
+
+        Route::post('get-unread/{program}', [\App\Http\Controllers\MessageController::class, 'adminGetUnreadMsg']);
     });
 
 });
@@ -196,7 +198,11 @@ Route::prefix('applicant')->group(function () {
 
         # send
         Route::post('{program}', [\App\Http\Controllers\MessageController::class, 'applicantSend']);
-        # send
+        
+        #update read status
         Route::post('read/{program}', [\App\Http\Controllers\MessageController::class, 'applicantReadMsg']);
+        
+        # gt unread
+        Route::post('get-unread/{program}', [\App\Http\Controllers\MessageController::class, 'applicantGetUnreadMsg']);
     });
 });
