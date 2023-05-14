@@ -242,7 +242,7 @@ class MessageController extends Controller
     {
         if ($request->user()->tokenCan('Admin')) {
             
-            $msg = Message::where(['applicant_id'=>$applicant->id, 'program_id'=>$program->id, 'to'=>'Admin', 'from'=>$request->user()->id])->update([
+            $msg = Message::where(['applicant_id'=>$applicant->id, 'program_id'=>$program->id, 'to'=>'Admin', 'from'=>$applicant->id])->update([
                 'status'=>1
             ]);
 
