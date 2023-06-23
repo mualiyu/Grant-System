@@ -497,27 +497,30 @@ class ApplicationController extends Controller
             ApplicationFinancialInfo::create($fy2);
             ApplicationFinancialInfo::create($fy3);
 
-            $dept = $request->financial_dept_info;
+            // $dept = $request->financial_dept_info;
 
-            $dept_create = ApplicationFinancialDebtInfo::create([
-                'application_id'=>$request->application_id,
-                'project_name'=> $dept['project_name'],
-                'location'=> $dept['location'],
-                'sector'=> $dept['sector'],
-                'aggregate_amount'=> $dept['aggregate_amount'],
-                'date_of_financial_close'=> $dept['date_of_financial_close'],
-                // 'date_of_first_drawdown'=> $dept['date_of_first_drawdown'],
-                // 'date_of_final_drawdown'=> $dept['date_of_final_drawdown'],
-                // 'tenor_of_financing'=> $dept['tenor_of_financing'],
-                'evidence_of_support'=> $dept['evidence_of_support'],
-            ]);
+            foreach ($request->financial_dept_info as $dept) {
+                $dept_create = ApplicationFinancialDebtInfo::create([
+                    'application_id'=>$request->application_id,
+                    'project_name'=> $dept['project_name'],
+                    'location'=> $dept['location'],
+                    'sector'=> $dept['sector'],
+                    'aggregate_amount'=> $dept['aggregate_amount'],
+                    'date_of_financial_close'=> $dept['date_of_financial_close'],
+                    // 'date_of_first_drawdown'=> $dept['date_of_first_drawdown'],
+                    // 'date_of_final_drawdown'=> $dept['date_of_final_drawdown'],
+                    // 'tenor_of_financing'=> $dept['tenor_of_financing'],
+                    'evidence_of_support'=> $dept['evidence_of_support'],
+                ]);
+    
+                $borrower = ApplicationFinancialDebtInfoBorrower::create([
+                    'application_financial_debt_id'=>$dept_create->id,
+                    'name'=> $dept['borrower']['name'],
+                    // 'rc_number'=> $dept['borrower']['rc_number'],
+                    'address'=> $dept['borrower']['address'],
+                ]);
+            }
 
-            $borrower = ApplicationFinancialDebtInfoBorrower::create([
-                'application_financial_debt_id'=>$dept_create->id,
-                'name'=> $dept['borrower']['name'],
-                // 'rc_number'=> $dept['borrower']['rc_number'],
-                'address'=> $dept['borrower']['address'],
-            ]);
 
             return response()->json([
                 'status' => true,
@@ -551,7 +554,10 @@ class ApplicationController extends Controller
             }
 
             if ($request->update == "1") {
-                ApplicationDocument::where("application_id", $request->application_id)->delete();
+                $dd = ApplicationDocument::where("application_id", $request->application_id)->get();
+                if (count($dd)>0) {
+                    ApplicationDocument::where("application_id", $request->application_id)->delete();
+                }
             }
 
             foreach ($request->documents as $key => $doc) {
@@ -833,7 +839,7 @@ class ApplicationController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => "Successful, Documents are added to application.",
+                'message' => "Successful,  Application added.",
                 'data' => [
                     "application"=>$app
                 ]

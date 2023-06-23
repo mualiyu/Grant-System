@@ -23,6 +23,10 @@ class ApplicantController extends Controller
             'person_incharge' => 'required',
             'rc_number'=>'required',
             'address'=>'required',
+            'cac_certificate' => 'nullable|max:9000',
+            'tax_clearance_certificate' => 'nullable|max:9000',
+            'has_designed'=>'required',
+            'has_operated'=>'required',
         ]);
 
         if ($validator->fails()) {
@@ -32,6 +36,32 @@ class ApplicantController extends Controller
             ], 422);
         }
 
+        if ($request->hasFile("cac_certificate")) {
+            $fileNameWExt = $request->file("cac_certificate")->getClientOriginalName();
+            $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+            $fileExt = $request->file("cac_certificate")->getClientOriginalExtension();
+            $fileNameToStore = $fileName."_".time().".".$fileExt;
+            $request->file("cac_certificate")->storeAs("public/profileFiles", $fileNameToStore);
+
+            $request['cac_certificate'] = url('/storage/profileFiles/'.$fileNameToStore);
+
+        }else{
+            $request['cac_certificate'] = "";
+        }
+
+        if ($request->hasFile("tax_clearance_certificate")) {
+            $fileNameWExt = $request->file("tax_clearance_certificate")->getClientOriginalName();
+            $fileName = pathinfo($fileNameWExt, PATHINFO_FILENAME);
+            $fileExt = $request->file("tax_clearance_certificate")->getClientOriginalExtension();
+            $fileNameToStore = $fileName."_".time().".".$fileExt;
+            $request->file("tax_clearance_certificate")->storeAs("public/profileFiles", $fileNameToStore);
+
+            $request['tax_clearance_certificate'] = url('/storage/profileFiles/'.$fileNameToStore);
+
+        }else{
+            $request['tax_clearance_certificate'] = "";
+        }
+
         // $request['password'] = Hash::make($request->password);
 
         $pass = mt_rand(10000000,99999999);
@@ -39,14 +69,24 @@ class ApplicantController extends Controller
         $password = Hash::make($pass);
 
         $request['password'] = $password;
+        $request['isApproved'] = 0;
 
         $user = Applicant::create($request->all());
 
         $mailData = [
             'title' => 'Your registration is successful.',
-            'body' => 'Use Username: '.$user->username.' & Password: '.$pass,
+            // 'body' => 'Use Username: '.$user->username.' & Password: '.$pass,
+            'body'=> "Congratulations on your successful registration! We are currently reviewing applicants and will notify you soon regarding the Approval decision.
+            \nOnce the selection is made, you will receive an acceptance notification along with your password for accessing your portal and resources.
+            \nThank you for your patience. We will keep you updated.
+            \nBest regards,",
         ];
+        ;
         // return "Your username is: ".$request->username." & password is: ".$pass;
+        // return "Congratulations on your successful registration! We are currently reviewing applicants and will notify you soon regarding the Approval decision.
+        // \nOnce the selection is made, you will receive an acceptance notification along with your password for accessing your portal and resources.
+        // \nThank you for your patience. We will keep you updated.
+        // \nBest regards,";
         Mail::to($user->email)->send(new AcceptApplicantMail($mailData));
 
         return response()->json([
@@ -79,7 +119,7 @@ class ApplicantController extends Controller
 
         $user = Applicant::where('username', $request->username)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!$user || !Hash::check($request->password, $user->password) || $user->isApproved==0) {
             return response()->json([
                 'status' => false,
                 'message' => trans('auth.failed')

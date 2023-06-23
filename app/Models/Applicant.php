@@ -25,6 +25,12 @@ class Applicant extends Model
         'person_incharge',
         'rc_number',
         'address',
+        
+        'has_operated',
+        'has_designed',
+        'cac_certificate',
+        'tax_clearance_certificate',
+        'isApproved',
         // 'cac_number',
     ];
 
