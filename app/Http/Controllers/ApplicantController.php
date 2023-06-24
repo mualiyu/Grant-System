@@ -43,7 +43,8 @@ class ApplicantController extends Controller
             $fileNameToStore = $fileName."_".time().".".$fileExt;
             $request->file("cac_certificate")->storeAs("public/profileFiles", $fileNameToStore);
 
-            $request['cac_certificate'] = url('/storage/profileFiles/'.$fileNameToStore);
+            $url = url('/storage/profileFiles/'.$fileNameToStore);
+            $request['cac_certificate'] = $url;
 
         }else{
             $request['cac_certificate'] = "";
@@ -56,7 +57,8 @@ class ApplicantController extends Controller
             $fileNameToStore = $fileName."_".time().".".$fileExt;
             $request->file("tax_clearance_certificate")->storeAs("public/profileFiles", $fileNameToStore);
 
-            $request['tax_clearance_certificate'] = url('/storage/profileFiles/'.$fileNameToStore);
+            $url = url('/storage/profileFiles/'.$fileNameToStore);
+            $request['tax_clearance_certificate'] = $url;
 
         }else{
             $request['tax_clearance_certificate'] = "";
@@ -69,7 +71,7 @@ class ApplicantController extends Controller
         $password = Hash::make($pass);
 
         $request['password'] = $password;
-        $request['isApproved'] = 0;
+        $request['isApproved'] = 1;
 
         $user = Applicant::create($request->all());
 
