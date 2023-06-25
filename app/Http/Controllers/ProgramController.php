@@ -261,12 +261,14 @@ class ProgramController extends Controller
 
                 foreach ($l->sublots as $key => $sl) {
                     $as = [
+                        "id"=>$sl->id,
                         "name"=>$sl->name,
                         "category"=>$sl->category_id
                     ];
 
                     array_push($al['subLots'],$as);
                 }
+                
                 array_push($arr['program']['lots'],$al);
             }
 
