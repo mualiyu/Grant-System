@@ -1015,7 +1015,7 @@ class ApplicationController extends Controller
                     $app_p = $app_profile[0];
                     if ((!$app_p->name==null) && (!$app_p->registration_date==null) && (count($app_p->contact_persons)>0) && (count($app_p->share_holders)>0)) {
                         $s_ap = 1;
-                        $data['eligibility_requirement']['msg'] .= " Profile Completed";
+                        $data['eligibility_requirement']['msg'] .= " Your Profile is completed";
                     }else {
                         $s_ap = 0;
                         $data['eligibility_requirement']['msg'] .= " You're still about to commplete the requirements";
@@ -1041,6 +1041,7 @@ class ApplicationController extends Controller
                     // checking if its completed
                 if (($s_ad == 1) && ($s_ap ==1)) {
                     $data['eligibility_requirement']['status'] = 1;
+                    $data['eligibility_requirement']['msg'] = "Completed";
                 }else{
                     $data['eligibility_requirement']['status'] = 0;
                 }
