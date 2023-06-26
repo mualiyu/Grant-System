@@ -192,6 +192,9 @@ Route::prefix('applicant')->group(function () {
 
         #Get application
         Route::get('get', [\App\Http\Controllers\ApplicationController::class, 'getApplication']);
+
+        #Get application progress
+        Route::get('get-progress', [\App\Http\Controllers\ApplicationController::class, 'getApplicationProgress']);
     });
 
     // Messages

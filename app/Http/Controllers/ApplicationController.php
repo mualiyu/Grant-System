@@ -65,7 +65,6 @@ class ApplicationController extends Controller
                     'sub_lot_id'=>$sub['id'],
                     'choice'=>$sub['choice'],
                 ]);
-                
             }
 
             return response()->json([
@@ -947,4 +946,135 @@ class ApplicationController extends Controller
     }
     
 
+    function getApplicationProgress(Request $request) 
+    {
+        if ($request->user()->tokenCan('Applicant')) {
+
+            $validator = Validator::make($request->all(), [
+                'program_id'=>'required',
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first()
+                ], 422);
+            }
+
+            $app = Application::where(['applicant_id'=> $request->user()->id, 'program_id'=>$request->program_id])->with("sublots")->get();
+            if (count($app)>0) {
+                $app = $app[0];
+
+                $data = [
+                    "lots"=> ['status'=> 0, 'msg'=>''],
+                    "sublots"=>['status'=> 0, 'msg'=>''],
+                    "eligibility_requirement"=> ['status'=> 0, 'msg'=>''],
+                    "technical_requirement"=> ['status'=> 0, 'msg'=>''],
+                    "financial_info"=> ['status'=> 0, 'msg'=>''],
+                ];
+
+                $app_profile = ApplicationProfile::where(["application_id"=>$app->id])->with('contact_persons')->with('share_holders')->get();
+                $app_staff = ApplicationCv::where(["application_id"=>$app->id])->with('employers')->with('current_position')->get();
+
+                $app_projects = ApplicationProject::where(["application_id"=>$app->id])->with('referees')->with('sub_contractors')->get();
+                
+                $app_fin = ApplicationFinancialInfo::where(["application_id"=>$app->id])->get();
+                $app_fin_dept = ApplicationFinancialDebtInfo::where(["application_id"=>$app->id])->with('borrowers')->get();
+
+                $fin = [
+                    "financial_info" => $app_fin,
+                    "financial_dept_info" => $app_fin_dept
+                ];
+                
+                $app_docs = ApplicationDocument::where(["application_id"=>$app->id])->get();
+                $sublots = DB::table('application_sub_lot')->where('application_id', $app->id)->get();
+
+                // progress for sub lots
+                if (count($sublots)>0) {
+                    $data['lots']['status'] = 1;
+                    $data['sublots']['status'] = 1;
+                    $num = count($sublots);
+                    if ($num < 4) {
+                        $data['lots']['msg'] = "";
+                        $data['sublots']['msg'] = "You have added $num Sub Lots only.";
+                    }else{
+                        $data['lots']['msg'] = "Completed";
+                        $data['sublots']['msg'] = "Completed";
+                    }
+                }else{
+                    $data['lots']['status'] = 0;
+                    $data['sublots']['status'] = 0;
+                    $data['lots']['msg'] = "You can add not more than 2 Lots & 4 Sublots.";
+                    $data['sublots']['msg'] = "You can add not more than 2 Lots & 4 Sublots.";
+                }
+                // end of progress for sub lots
+
+                // progress for eligibility requirement
+                $s_ap = 0;
+                if (count($app_profile) > 0) {
+                    $app_p = $app_profile[0];
+                    if ((!$app_p->name==null) && (!$app_p->registration_date==null) && (count($app_p->contact_persons)>0) && (count($app_p->share_holders)>0)) {
+                        $s_ap = 1;
+                        $data['eligibility_requirement']['msg'] .= " Profile Completed";
+                    }else {
+                        $s_ap = 0;
+                        $data['eligibility_requirement']['msg'] .= " You're still about to commplete the requirements";
+                    }
+                }else {
+                    $s_ap = 0;
+                    $data['eligibility_requirement']['msg'] .= " You need to add APPLICANT NAME & DATE OF INCORPORATION/REGISTRATION";
+                }
+                $s_ad = 0;
+                if (count($app_docs) > 0) {
+                    if (count($app_docs)<12) {
+                        $s_ad = 0;
+                        $data['eligibility_requirement']['msg'] .= " and the document uploades are not complete.";
+                    }else{
+                        $s_ad = 1;
+                        $data['eligibility_requirement']['msg'] .= ".";
+                    }
+                }else {
+                    $s_ad = 0;
+                    $data['eligibility_requirement']['msg'] .= " and you have not uploaded documents yet.";
+                }
+
+                // checking if its completed
+                if (($s_ad == 1) && ($s_ap ==1)) {
+                    $data['eligibility_requirement']['status'] = 1;
+                }else{
+                    $data['eligibility_requirement']['status'] = 0;
+                }
+                // end of progress for eligibility requirement
+
+
+
+                return response()->json([
+                    'status' => true,
+                    'message' => "Successful.",
+                    'data' => [
+                        "application"=>$app
+                    ]
+                ]);                
+            }else{
+                $data = [
+                    "lots"=> ['status'=> 0, 'msg'=>''],
+                    "sublots"=>['status'=> 0, 'msg'=>''],
+                    "eligibility_requirement"=> ['status'=> 0, 'msg'=>''],
+                    "technical_requirement"=> ['status'=> 0, 'msg'=>''],
+                    "financial_info"=> ['status'=> 0, 'msg'=>''],
+                ];
+                return response()->json([
+                    'status' => false,
+                    'data'=> $data,
+                    'message' => "No Application found"
+                ], 422);
+            }
+            
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }
+    }
 }
