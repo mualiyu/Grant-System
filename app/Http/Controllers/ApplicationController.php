@@ -1047,11 +1047,56 @@ class ApplicationController extends Controller
                 }
                 // end of progress for eligibility requirement
 
+                // progress for Technical requirement
+                $s_apf = 0;
+                if (count($app_profile) > 0) {
+                    $app_p = $app_profile[0];
+                    if ((!$app_p->description==null) && (!$app_p->website==null) && (!$app_p->evidence_of_equipment_ownership==null)) {
+                        $s_apf = 1;
+                        $data['technical_requirement']['msg'] .= " Your Profile technical requirement is complete";
+                    }else {
+                        $s_apf = 0;
+                        $data['technical_requirement']['msg'] .= " You're still about to commplete your profile technical requirements";
+                    }
+                }else {
+                    $s_apf = 0;
+                    $data['technical_requirement']['msg'] .= " You need to go back to 'ELIGIBILITY REQUIREMENTS' tab and add APPLICANT NAME & DATE OF INCORPORATION/REGISTRATION";
+                }
+
+                $s_as = 0;
+                if (count($app_staff) > 0) {
+                    $s_as = 1;
+                    $data['technical_requirement']['msg'] .= "";
+                }else {
+                    $s_as = 0;
+                    $data['technical_requirement']['msg'] .= " and You need to add atleast one employer";
+                }
+
+                $s_apr = 0;
+                if (count($app_projects) > 0) {
+                    $s_apr = 1;
+                    $data['technical_requirement']['msg'] .= "";
+                }else {
+                    $s_apr = 0;
+                    $data['technical_requirement']['msg'] .= " You need to add atleast one project";
+                }
+
+                // checking if its completed
+                if (($s_apf == 1) && ($s_as == 1) && ($s_apr == 1)) {
+                    $data['technical_requirement']['status'] = 1;
+                    $data['technical_requirement']['msg'] = "Completed";
+                }else{
+                    $data['technical_requirement']['status'] = 0;
+                }
+                // End of tech requirement
+
                 return response()->json([
                     'status' => true,
                     'message' => "Successful.",
                     'data' => $data,
-                ]);                
+                ]);   
+                
+                
             }else{
                 $data = [
                     "lots"=> ['status'=> 0, 'msg'=>''],
