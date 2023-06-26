@@ -996,7 +996,7 @@ class ApplicationController extends Controller
                     $num = count($sublots);
                     if ($num < 4) {
                         $data['lots']['msg'] = "";
-                        $data['sublots']['msg'] = "You have added $num Sub Lots only.";
+                        $data['sublots']['msg'] = "You have added $num Sub Lots only, you can add up-to 4.";
                     }else{
                         $data['lots']['msg'] = "Completed";
                         $data['sublots']['msg'] = "Completed";
