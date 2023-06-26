@@ -1069,7 +1069,7 @@ class ApplicationController extends Controller
                     $data['technical_requirement']['msg'] .= "";
                 }else {
                     $s_as = 0;
-                    $data['technical_requirement']['msg'] .= " and You need to add atleast one employer";
+                    $data['technical_requirement']['msg'] .= ", and You need to add atleast one employer";
                 }
 
                 $s_apr = 0;
@@ -1078,7 +1078,7 @@ class ApplicationController extends Controller
                     $data['technical_requirement']['msg'] .= "";
                 }else {
                     $s_apr = 0;
-                    $data['technical_requirement']['msg'] .= " You need to add atleast one project";
+                    $data['technical_requirement']['msg'] .= ", You need to add atleast one project";
                 }
 
                 // checking if its completed
