@@ -1038,7 +1038,7 @@ class ApplicationController extends Controller
                     $data['eligibility_requirement']['msg'] .= " and you have not uploaded documents yet.";
                 }
 
-                // checking if its completed
+                    // checking if its completed
                 if (($s_ad == 1) && ($s_ap ==1)) {
                     $data['eligibility_requirement']['status'] = 1;
                 }else{
@@ -1046,14 +1046,10 @@ class ApplicationController extends Controller
                 }
                 // end of progress for eligibility requirement
 
-
-
                 return response()->json([
                     'status' => true,
                     'message' => "Successful.",
-                    'data' => [
-                        "application"=>$app
-                    ]
+                    'data' => $data,
                 ]);                
             }else{
                 $data = [
