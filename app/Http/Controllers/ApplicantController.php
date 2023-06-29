@@ -77,18 +77,13 @@ class ApplicantController extends Controller
 
         $mailData = [
             'title' => 'Your registration is successful.',
-            // 'body' => 'Use Username: '.$user->username.' & Password: '.$pass,
-            'body'=> "Congratulations on your successful registration! We are currently reviewing applicants and will notify you soon regarding the Approval decision.
-            \nOnce the selection is made, you will receive an acceptance notification along with your password for accessing your portal and resources.
-            \nThank you for your patience. We will keep you updated.
-            \nBest regards,",
+            'body' => 'Use Username: '.$user->username.' & Password: '.$pass,
+            // 'body'=> "Congratulations on your successful registration! We are currently reviewing applicants and will notify you soon regarding the Approval decision.
+            // \nOnce the selection is made, you will receive an acceptance notification along with your password for accessing your portal and resources.
+            // \nThank you for your patience. We will keep you updated.
+            // \nBest regards,",
         ];
-        ;
-        // return "Your username is: ".$request->username." & password is: ".$pass;
-        // return "Congratulations on your successful registration! We are currently reviewing applicants and will notify you soon regarding the Approval decision.
-        // \nOnce the selection is made, you will receive an acceptance notification along with your password for accessing your portal and resources.
-        // \nThank you for your patience. We will keep you updated.
-        // \nBest regards,";
+        
         Mail::to($user->email)->send(new AcceptApplicantMail($mailData));
 
         return response()->json([
