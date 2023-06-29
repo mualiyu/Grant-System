@@ -190,6 +190,8 @@ Route::prefix('applicant')->group(function () {
         # submit
         Route::post('submit', [\App\Http\Controllers\ApplicationController::class, 'submit']);
 
+        Route::post('accept/pre-qualification', [\App\Http\Controllers\ApplicationController::class, 'pre_qualification']);
+
         #Get application
         Route::get('get', [\App\Http\Controllers\ApplicationController::class, 'getApplication']);
 

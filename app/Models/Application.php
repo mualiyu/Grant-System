@@ -22,6 +22,7 @@ class Application extends Model
         'applicant_id',
         'program_id',
         'status',
+        'pre_qualification_status',
     ];
 
     public function sublots(): BelongsToMany

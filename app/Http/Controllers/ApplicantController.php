@@ -148,7 +148,17 @@ class ApplicantController extends Controller
         }
 
         $applicant = Applicant::where('username', '=', $request->username)->get();
-
+        if (!count($applicant)>0) {
+            $applicant = Applicant::where('email', '=', $request->username)->get();
+        }else{
+            $applicant = Applicant::where('username', '=', $request->username)->get();
+        }
+        $username = $request->user;
+        if (is_numeric($username) == true) {
+            $user = Applicant::where('phone', '=', $username)->get();
+        } else {
+            $user = Applicant::where('username', '=', $username)->get();
+        }
         if (count($applicant) > 0) {
 
             $pass = mt_rand(10000000, 99999999);
@@ -167,9 +177,9 @@ class ApplicantController extends Controller
             ]);
                 
             if ($update) {
-                // return "Your username is: ".$user->username." & password is: ".$pass;
+                return "Your username is: ".$user->username." & password is: ".$pass;
 
-                Mail::to($user->email)->send(new AcceptApplicantMail($mailData));
+                // Mail::to($user->email)->send(new AcceptApplicantMail($mailData));
                 return response()->json([
                     'status' => true,
                     'message' => "An email is sent to your mail. Thank you!"

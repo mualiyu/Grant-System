@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('applications', function (Blueprint $table) {
             $table->string("status")->nullable();
+            $table->string('pre_qualification_status')->nullable();
         });
     }
 

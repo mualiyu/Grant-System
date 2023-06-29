@@ -1095,8 +1095,7 @@ class ApplicationController extends Controller
                     'message' => "Successful.",
                     'data' => $data,
                 ]);   
-                
-                
+                 
             }else{
                 $data = [
                     "lots"=> ['status'=> 0, 'msg'=>''],
@@ -1112,6 +1111,42 @@ class ApplicationController extends Controller
                 ], 422);
             }
             
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }
+    }
+
+    function pre_qualification(Request $request)
+    {
+        if ($request->user()->tokenCan('Applicant')) {
+
+            $validator = Validator::make($request->all(), [
+                'application_id'=>'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first()
+                ], 422);
+            }
+
+            Application::where('id', $request->application_id)->update([
+                "pre_qualification_status"=>"1"
+            ]);
+
+            $app = Application::find($request->application_id);
+
+            return response()->json([
+                'status' => true,
+                'message' => "Successful, You've accepted the pre-qualification document.",
+                'data' => [
+                    "application"=>$app
+                ]
+            ]);
         }else{
             return response()->json([
                 'status' => false,
