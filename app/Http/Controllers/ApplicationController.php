@@ -1090,6 +1090,40 @@ class ApplicationController extends Controller
                 }
                 // End of tech requirement
 
+
+                // progress for Financial Info
+                $s_asf = 0;
+                if (count($app_fin) > 0) {
+                    if (count($app_fin)<3) {
+                        $s_asf = 0;
+                    $data['financial_info']['msg'] .= "You to add all the fields";
+                    }else {
+                        $s_asf = 1;
+                        $data['financial_info']['msg'] .= "";
+                    }
+                }else {
+                    $s_asf = 0;
+                    $data['financial_info']['msg'] .= "You need to add your financial info.";
+                }
+
+                $s_aprf = 0;
+                if (count($app_fin_dept) > 0) {
+                    $s_aprf = 1;
+                    $data['financial_info']['msg'] .= "";
+                }else {
+                    $s_aprf = 0;
+                    $data['financial_info']['msg'] .= "You need to add atleast financial dept";
+                }
+
+                // checking if its completed
+                if (($s_asf == 1) && ($s_aprf == 1)) {
+                    $data['financial_info']['status'] = 1;
+                    $data['financial_info']['msg'] = "Completed";
+                }else{
+                    $data['financial_info']['status'] = 0;
+                }
+                // End of Financial Info
+
                 return response()->json([
                     'status' => true,
                     'message' => "Successful.",
