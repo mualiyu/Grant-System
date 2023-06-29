@@ -115,7 +115,7 @@ class ApplicantController extends Controller
         }
 
         $user = Applicant::where('username', $request->username)->first();
-        if (!count($user)>0) {
+        if ($user) {
             $user = Applicant::where('email', $request->username)->first();
         }else{
             $user = Applicant::where('username', $request->username)->first();
