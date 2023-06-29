@@ -946,7 +946,7 @@ class ApplicationController extends Controller
     }
     
 
-    function getApplicationProgress(Request $request) 
+    public function getApplicationProgress(Request $request) 
     {
         if ($request->user()->tokenCan('Applicant')) {
 
@@ -1119,7 +1119,7 @@ class ApplicationController extends Controller
         }
     }
 
-    function pre_qualification(Request $request)
+    public function pre_qualification(Request $request)
     {
         if ($request->user()->tokenCan('Applicant')) {
 
