@@ -114,12 +114,16 @@ class ApplicantController extends Controller
             ], 422);
         }
 
-        $user = Applicant::where('username', $request->username)->first();
-        if (!$user) {
-            $user = Applicant::where('username', $request->username)->first();
+        // $user = Applicant::where('username', $request->username)->first();
+        $user = Applicant::where('username', '=', $request->username)->get();
+        if (!count($user)>0) {
+            $user = Applicant::where('email', '=', $request->username)->get();
+            // $user = Applicant::where('email', $request->username)->first();
         }else{
-            $user = Applicant::where('email', $request->username)->first();
+            $user = Applicant::where('username', '=', $request->username)->get();
+            // $user = Applicant::where('username', $request->username)->first();
         }
+        $user = $user[0];
 
         if (!$user || !Hash::check($request->password, $user->password) || $user->isApproved==0) {
             return response()->json([
