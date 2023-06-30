@@ -966,6 +966,7 @@ class ApplicationController extends Controller
                 $app = $app[0];
 
                 $data = [
+                    "pre_qualification"=> ['status'=> 0, 'msg'=>''],
                     "lots"=> ['status'=> 0, 'msg'=>''],
                     "sublots"=>['status'=> 0, 'msg'=>''],
                     "eligibility_requirement"=> ['status'=> 0, 'msg'=>''],
@@ -989,6 +990,13 @@ class ApplicationController extends Controller
                 $app_docs = ApplicationDocument::where(["application_id"=>$app->id])->get();
                 $sublots = DB::table('application_sub_lot')->where('application_id', $app->id)->get();
 
+                if ($app->pre_qualification_status == 1) {
+                    $data['pre_qualification']['status'] = 1;
+                    $data['lots']['msg'] = "Completed";
+                }else{
+                    $data['pre_qualification']['status'] = 0;
+                    $data['lots']['msg'] = "you have to agree to the PreQualification document.";
+                }
                 // progress for sub lots
                 if (count($sublots)>0) {
                     $data['lots']['status'] = 1;
@@ -1132,6 +1140,7 @@ class ApplicationController extends Controller
                  
             }else{
                 $data = [
+                    "pre_qualification"=> ['status'=> 0, 'msg'=>''],
                     "lots"=> ['status'=> 0, 'msg'=>''],
                     "sublots"=>['status'=> 0, 'msg'=>''],
                     "eligibility_requirement"=> ['status'=> 0, 'msg'=>''],
