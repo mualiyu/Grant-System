@@ -61,6 +61,8 @@ Route::prefix('admin')->group(function () {
         Route::middleware('auth:sanctum')->prefix('applications')->group(function () { 
             #Get application
             Route::get('getAll', [\App\Http\Controllers\ProgramController::class, 'getApplications']);
+
+            Route::get('getOne', [\App\Http\Controllers\ProgramController::class, 'getSingleApplication']);
         });
     
     });
@@ -79,6 +81,17 @@ Route::prefix('admin')->group(function () {
         
         # get
         Route::get('list', [\App\Http\Controllers\CategoryController::class, 'showAll']);
+    
+    });
+
+    // Applicant
+    Route::middleware('auth:sanctum')->prefix('applicants')->group(function () {
+        // # store
+        // Route::post('create', [\App\Http\Controllers\CategoryController::class, 'create']);
+        
+        # get list
+        Route::get('list', [\App\Http\Controllers\ApplicantController::class, 'showAllApplicant']);
+        Route::get('accept', [\App\Http\Controllers\ApplicantController::class, 'acceptApplicant']);
     
     });
 

@@ -649,4 +649,93 @@ class ApplicantController extends Controller
             ], 404);
         }
     }
+
+
+    // Admin get all applicants
+    public function showAllApplicant(Request $request) 
+    {
+        if ($request->user()->tokenCan('Admin')) {
+            $applicants = [
+                'verified' => "",
+                'unverified' => "",
+            ];
+
+            $verified = Applicant::where('isApproved', '=', '1')->get();
+            $unverified = Applicant::where('isApproved', '=', '0')->get();
+
+            $applicants['verified'] = $verified;
+            $applicants['unverified'] = $unverified;
+
+            return response()->json([
+                'status' => true,
+                'data' => [
+                    'applicants' => $applicants
+                ],
+            ]);
+
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }
+    }
+
+    // Admin get all applicants
+    public function acceptApplicant(Request $request) 
+    {
+        if ($request->user()->tokenCan('Admin')) {
+            $validator = Validator::make($request->all(), [
+                'applicant_id' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first()
+                ], 422);
+            }
+
+            $pass = mt_rand(10000000,99999999);
+            
+            $password = Hash::make($pass);
+            
+            $isApproved = 1;
+            
+            $user = Applicant::where(['id'=>$request->applicant_id])->update([
+                'password'=>$password,
+                'isApproved'=>$isApproved,
+            ]);
+            
+            if ($user) {
+                $applicant = Applicant::find($request->applicant_id);
+
+                $mailData = [
+                    'title' => 'Your registration approved by an Administrator.',
+                    'body' => "Use your Username or Email and ".$pass." as your password\n\nThank you...",
+                ];
+                
+                Mail::to($applicant->email)->send(new AcceptApplicantMail($mailData));
+    
+                return response()->json([
+                    'status' => true,
+                    'data' => [
+                        'applicant' => $applicant
+                    ],
+                    'message' => "An email has been sent to the applicant to notify them about this action."
+                ]);
+            }else {
+                return response()->json([
+                    'status' => false,
+                    'message' => "Failde to update Applicant record, Try again..."
+                ], 404);
+            }
+    
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => trans('auth.failed')
+            ], 404);
+        }
+    }
 }
