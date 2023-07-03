@@ -91,7 +91,7 @@ Route::prefix('admin')->group(function () {
         
         # get list
         Route::get('list', [\App\Http\Controllers\ApplicantController::class, 'showAllApplicant']);
-        Route::get('accept', [\App\Http\Controllers\ApplicantController::class, 'acceptApplicant']);
+        Route::post('accept', [\App\Http\Controllers\ApplicantController::class, 'acceptApplicant']);
     
     });
 
