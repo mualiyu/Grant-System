@@ -46,9 +46,6 @@ class ProgramController extends Controller
             
             
             $stages = $prog['stages'];
-            // $documents = $prog['uploads'];
-            // $statuses = $prog['status'];
-            // $milestones = $prog['milestones'];
 
 
             $program = Program::create([
@@ -202,8 +199,6 @@ class ProgramController extends Controller
     }
 
     public function show(Request $request)
-    {
-        // if ($request->user()->tokenCan('Admin')) {
 
             $validator = Validator::make($request->all(), [
                 'programId' => 'required',
@@ -228,12 +223,6 @@ class ProgramController extends Controller
                                     ->with('statuses')->get()[0],
                 ],
             ]);
-        // }else{
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => trans('auth.failed')
-        //     ], 404);
-        // }
     }
 
     public function showObj(Request $request)
