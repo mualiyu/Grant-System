@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\AcceptApplicantMail;
+use App\Mail\MessageNotificationMail;
 use App\Models\Applicant;
 use App\Models\JV;
 use App\Models\User;
@@ -84,7 +85,7 @@ class ApplicantController extends Controller
             // \nBest regards,",
         ];
         
-        Mail::to($user->email)->send(new AcceptApplicantMail($mailData));
+        Mail::to($user->email)->send(new MessageNotificationMail($mailData));
 
         return response()->json([
             'status' => true,
@@ -186,9 +187,10 @@ class ApplicantController extends Controller
             ]);
                 
             if ($update) {
-                return "Your username is: ".$user->username." & password is: ".$pass;
+                // return "Your username is: ".$user->username." & password is: ".$pass;
 
-                // Mail::to($user->email)->send(new AcceptApplicantMail($mailData));
+                Mail::to($user->email)->send(new AcceptApplicantMail($mailData));
+                
                 return response()->json([
                     'status' => true,
                     'message' => "An email is sent to your mail. Thank you!"
@@ -712,7 +714,7 @@ class ApplicantController extends Controller
 
                 $mailData = [
                     'title' => 'Your registration approved by an Administrator.',
-                    'body' => "Use your Username or Email and ".$pass." as your password\n\nThank you...",
+                    'body' => "Use your Username or Email and ".$pass." as your password \n\nThank you...",
                 ];
                 
                 Mail::to($applicant->email)->send(new AcceptApplicantMail($mailData));

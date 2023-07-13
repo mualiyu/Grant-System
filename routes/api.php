@@ -63,6 +63,8 @@ Route::prefix('admin')->group(function () {
             Route::get('getAll', [\App\Http\Controllers\ProgramController::class, 'getApplications']);
 
             Route::get('getOne', [\App\Http\Controllers\ProgramController::class, 'getSingleApplication']);
+
+            // Route::get('download/applicationDocuments', [\App\Http\Controllers\ProgramController::class, 'downloadApplicationDocuments']);
         });
     
     });

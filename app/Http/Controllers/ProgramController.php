@@ -20,6 +20,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+// zip
+use Illuminate\Support\Facades\File;
+use ZipArchive;
+
 class ProgramController extends Controller
 {
     
@@ -493,4 +497,40 @@ class ProgramController extends Controller
             ], 404);
         }
     }
+
+    // public function downloadApplicationDocuments(Request $request)
+    // {
+    //     if ($request->user()->tokenCan('Admin')) {
+
+    //         $zip = new ZipArchive;
+
+    //         $fileName = 'myNewFile.zip';
+
+    //         if ($zip->open(public_path($fileName), ZipArchive::CREATE) === TRUE) {
+    //             $files = File::files(public_path('myFiles'));
+
+    //             foreach ($files as $key => $value) {
+    //                 $relativeNameInZipFile = basename($value);
+    //                 $zip->addFile($value, $relativeNameInZipFile);
+    //             }
+
+    //             $zip->close();
+    //         }
+
+    //         return response()->download(public_path($fileName));
+
+    //         // return response()->json([
+    //         //     'status' => true,
+    //         //     'data' => [
+    //         //         'applications' => '',
+    //         //     ],
+    //         // ]);
+
+    //     } else {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => trans('auth.failed')
+    //         ], 404);
+    //     }
+    // }
 }

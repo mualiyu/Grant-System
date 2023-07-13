@@ -21,6 +21,7 @@ class ContactPerson extends Model
         'phone',
         'email',
         'address',
+        'designation',
     ];
 
     public function app_profile(): BelongsTo

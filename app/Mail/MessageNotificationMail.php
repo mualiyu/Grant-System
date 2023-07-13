@@ -29,7 +29,7 @@ class MessageNotificationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Message Notification Alert',
+            subject: $this->mailData['title'],
         );
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\MessageNotificationMail;
 use App\Models\Application;
 use App\Models\ApplicationCurrentPosition;
 use App\Models\ApplicationCv;
@@ -23,6 +24,7 @@ use App\Models\ShareHolder;
 use App\Models\SubLot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class ApplicationController extends Controller
@@ -143,6 +145,7 @@ class ApplicationController extends Controller
                         "phone"=>$cp['phone'],
                         "email"=>$cp['email'],
                         "address"=>$cp['address'],
+                        "designation"=>$cp["designation"]
                     ]);
                 }
             }
@@ -830,9 +833,27 @@ class ApplicationController extends Controller
                 ], 422);
             }
 
+            $application = Application::where('id', $request->application_id)->get();
+
             Application::where('id', $request->application_id)->update([
                 "status"=>"1"
             ]);
+
+            if (!$application[0]->status == 1) {
+                $mailData = [
+                    'title' => 'REA - Application update',
+                    'body' => "Dear ".$request->user()->name." with ".$request->user()->email.", \nYour application for ".$application[0]->program->name." has been successfuly submited, And you have a window to edit your application before the deadline as shown on the portal. \nThank you.",
+                ];
+                
+                Mail::to($request->user()->email)->send(new MessageNotificationMail($mailData));
+            }else{
+                $mailData = [
+                    'title' => 'REA - Application update',
+                    'body' => "Dear ".$request->user()->name." with ".$request->user()->email.", \nYour application for ".$application[0]->program->name." has been updated, And you still have a window to edit your application before the deadline. \nThank you.",
+                ];
+                
+                Mail::to($request->user()->email)->send(new MessageNotificationMail($mailData));
+            }
 
             $app = Application::find($request->application_id);
 
